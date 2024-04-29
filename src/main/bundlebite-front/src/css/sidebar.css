@@ -1,0 +1,25 @@
+.sidebar{
+    width: 341px;
+    height: 100vh;
+    flex-shrink: 0;
+    background: #65C9DF;
+  }
+  .sidebar{
+    padding-top:45px;
+    padding-left:45px;
+    display:flex;
+    flex-direction: column;
+    gap: 45px;
+    text-align: left;
+  }
+  .sidebar a{
+    color: #fff;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    text-decoration: none;
+  }
+  .sidebar a:hover{
+    text-decoration: underline;
+  }
+  
