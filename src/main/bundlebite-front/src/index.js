@@ -7,6 +7,7 @@ import './css/header.css'
 import './css/homepage.css'
 import './css/suppliers.css'
 import './css/sidebar.css'
+import './css/orders.css'
 import App from './App';
 
 // const root = ReactDOM.createRoot(document.getElementById('root'));
