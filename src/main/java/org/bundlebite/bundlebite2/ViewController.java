@@ -1,16 +1,19 @@
-import org.bundlebite.bundlebite2.*;
+package org.bundlebite.bundlebite2;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-// redirect to SPA index.html
 @Controller
 public class ViewController {
 
-    @GetMapping(value = {"/{path:[^\\.]*}"})
-    public String redirect() {
-        System.out.println("Forwarding to index.html");
+    private static final Logger logger = LoggerFactory.getLogger(ViewController.class);
+
+    @RequestMapping(value = "/**/{path:[^\\.]*}")
+    public String forward() {
+        logger.info("URL entered directly into the Browser, so we need to redirect...");
         return "forward:/index.html";
     }
-
 }
 
