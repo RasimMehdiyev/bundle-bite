@@ -1,3 +1,5 @@
+package org.bundlebite.bundlebite2;
+
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentSnapshot;
@@ -15,10 +17,14 @@ import java.util.concurrent.ExecutionException;
 import org.bundlebite.bundlebite2.Order;
 
 @RestController
-@RequestMapping("/api/orders")
 public class OrdersController {
 
-    @GetMapping
+    @GetMapping("/api/hello")
+    public String hello() {
+        return "Hello, World!";
+    }
+
+    @GetMapping("/api/orders")
     public List<Order> getAllOrders() throws ExecutionException, InterruptedException {
         Firestore firestore = FirestoreClient.getFirestore();
         CollectionReference ordersCollection = firestore.collection("orders");

@@ -15,5 +15,10 @@ public class ViewController {
         logger.info("URL entered directly into the Browser, so we need to redirect...");
         return "forward:/index.html";
     }
+    // if /api/** is requested, return json data from OrdersController.java
+    @GetMapping("/api/**")
+    public String api() {
+        return "forward:/api/orders";
+    }
 }
 

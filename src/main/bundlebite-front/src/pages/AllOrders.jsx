@@ -1,7 +1,22 @@
 import React from "react";
+import axios from "axios";
 
 const AllOrders = () => {
-    
+
+    const auth = {
+        username: 'user',
+        password: 'password'
+    }
+
+
+    const fetchOrders = async () => {
+        try {
+            const response = await axios.get("/api/orders");
+            console.log(response.data);
+        } catch (error) {
+            console.error("Error fetching orders:", error.message);
+        }
+    }
 
     return(
         <div>
