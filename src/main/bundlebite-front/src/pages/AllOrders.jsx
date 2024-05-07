@@ -1,6 +1,8 @@
 import React from "react";
 
 import ManagerSidebar from "../components/ManagerSidebar.jsx";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const AllOrders = () => {
     
@@ -9,7 +11,13 @@ const AllOrders = () => {
         <div className="all" >
             <ManagerSidebar/>
             <div className="right-section">
-                <h1 className="header">ORDERS</h1>
+                <div className="header-container">
+                      <h1 className="header">ORDERS</h1>
+                      <div className="search-container">
+                          <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                          <input className="search-bar" type="text" placeholder="#ORDER"/>
+                      </div>
+                </div>
                 <div className="order">
                     <span className="order-id">Order ID: 1</span>
                     <span className="order-date">Order Date: 01/01/2021</span>
