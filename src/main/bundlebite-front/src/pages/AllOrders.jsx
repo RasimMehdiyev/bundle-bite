@@ -6,10 +6,10 @@ const AllOrders = () => {
     
 
     return(
-        <div>
+        <div className="all" >
             <ManagerSidebar/>
-            <div>
-                <h1 style={{ fontFamily: 'Cabin Sketch', marginLeft:'20px', fontSize: '41px'}}>ORDERS</h1>
+            <div className="right-section">
+                <h1 className="header">ORDERS</h1>
                 <div className="order">
                     <span className="order-id">Order ID: 1</span>
                     <span className="order-date">Order Date: 01/01/2021</span>
