@@ -1,31 +1,58 @@
 import React from 'react';
-import {useAuth, signOutUser} from "../auth";
+import { useAuth, signOutUser } from "../auth";
 import { useNavigate } from 'react-router-dom';
-const SidebarComponent = () => {
+
+const SidebarComponent = ({ activeLink }) => {
     const navigate = useNavigate();
+
     const handleLogout = () => {
         signOutUser();
         navigate("/login");
     }
-    const {user,loading} = useAuth();
+
+    const { user } = useAuth();
+
     return (
         <>
             {user ? (
                 <div className='sidebar'>
-                    <a href="/profile">YOUR PROFILE</a>
-                    <a href="/orders">YOUR ORDERS</a>
-                    <a onClick={(handleLogout)}>LOGOUT</a>
+                    <a
+                        href="/profile"
+                        className={activeLink === "/profile" ? "active-link" : ""}
+                    >YOUR PROFILE</a>
+                    <a
+                        href="/orders"
+                        className={activeLink === "/orders" ? "active-link" : ""}
+                    >YOUR ORDERS</a>
+                    <a
+                        onClick={() => {
+                            handleLogout();
+                        }}
+                        className={activeLink === "/login" ? "active-link" : ""}
+                    >LOGOUT</a>
                 </div>
-            ):(
+            ) : (
                 <div className='sidebar'>
-                    <a href="/profile">YOUR PROFILE</a>
-                    <a href="/orders">YOUR ORDERS</a>
-                    <a href="/signup" id="btnSignUp">SIGN UP</a>
-                    <a href="/login" id="btnSignIn">SIGN IN</a>
+                    <a
+                        href="/profile"
+                        className={activeLink === "/profile" ? "active-link" : ""}
+                    >YOUR PROFILE</a>
+                    <a
+                        href="/orders"
+                        className={activeLink === "/orders" ? "active-link" : ""}
+                    >YOUR ORDERS</a>
+                    <a
+                        href="/signup"
+                        id="btnSignUp"
+                        className={activeLink === "/signup" ? "active-link" : ""}
+                    >SIGN UP</a>
+                    <a
+                        href="/login"
+                        id="btnSignIn"
+                        className={activeLink === "/login" ? "active-link" : ""}
+                    >SIGN IN</a>
                 </div>
-            )
-
-            }
+            )}
         </>
     )
 }

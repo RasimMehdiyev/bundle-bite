@@ -10,7 +10,7 @@ const AllOrders = () => {
 
     return(
         <div className="all" >
-            <ManagerSidebar/>
+            <ManagerSidebar activeLink="/all-orders"/>
             <div className="right-section">
                 <div className="header-container">
                       <h1 className="header">ORDERS</h1>

@@ -17,9 +17,12 @@
     font-family: 'Be Vietnam Pro', sans-serif;
     font-size: 22px;
     font-weight: 400;
-    text-decoration: none;
+
   }
   .sidebar a:hover{
     text-decoration: underline;
   }
-  
+
+  .active-link {
+      text-decoration: underline;
+  }
