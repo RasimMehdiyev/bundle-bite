@@ -21,12 +21,44 @@ const AllOrders = () => {
                 </div>
 
                 <div className="order-grid">
-                    <UserOrderCardComponent />
-                    <UserOrderCardComponent />
-                    <UserOrderCardComponent />
-                    <UserOrderCardComponent />
-                    <UserOrderCardComponent />
-                    <UserOrderCardComponent />
+                    <UserOrderCardComponent
+                      orderId="25781976"
+                      userId="25001976"
+                      date="01/05/2024"
+                      status="Received"
+                      items={[
+                          { quantity: 2, name: "VODKA PASTA" },
+                          { quantity: 2, name: "BEEF TARTAR" },
+                          { quantity: 1, name: "POKE BOWL" }
+                        ]}
+                      total="62"
+                    />
+
+                    <UserOrderCardComponent
+                      orderId="25781976"
+                      userId="25001976"
+                      date="01/05/2024"
+                      status="Out for delivery"
+                      items={[
+                          { quantity: 2, name: "VODKA PASTA" },
+                          { quantity: 2, name: "BEEF TARTAR" },
+                          { quantity: 1, name: "POKE BOWL" }
+                        ]}
+                        total="62"
+                    />
+
+                     <UserOrderCardComponent
+                        orderId="25781976"
+                        userId="25001976"
+                        date="01/05/2024"
+                        status="Confirmed"
+                        items={[
+                           { quantity: 2, name: "VODKA PASTA" },
+                           { quantity: 2, name: "BEEF TARTAR" },
+                           { quantity: 1, name: "POKE BOWL" }
+                           ]}
+                           total="62"
+                     />
                 </div>
 
             </div>
