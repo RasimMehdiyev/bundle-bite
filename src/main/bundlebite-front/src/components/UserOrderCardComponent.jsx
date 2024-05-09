@@ -43,7 +43,7 @@ const UserOrderCardComponent = ({
                     className="user-number"
                     style={{ cursor: "pointer", textDecoration: "underline" }}
                      onClick={openModal}>
-                     ORDER #{userId}
+                     USER #{userId}
                      </span>
               </div>
 
@@ -72,7 +72,7 @@ const UserOrderCardComponent = ({
                   </div>
 
               </div>
-              <UserModalComponent enabled={isModalOpen ? "block" : "none"} onCancel={closeModal} />
+              <UserModalComponent enabled={isModalOpen ? "block" : "none"} onCancel={closeModal} userId={userId} name="Jane Doe" email="janedoe@gmail.com"/>
         </div>
 
     )

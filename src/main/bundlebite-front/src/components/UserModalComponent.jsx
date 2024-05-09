@@ -1,7 +1,8 @@
 import React from "react";
 
 
-const UserModalComponent = ({enabled, onCancel, onConfirm}) => {
+const UserModalComponent = ({enabled, onCancel, userId, name, email}) => {
+
 
     const handleCancel = () => {
         onCancel();
@@ -11,14 +12,17 @@ const UserModalComponent = ({enabled, onCancel, onConfirm}) => {
     return(
         <div className="user-modal-bg" style={{display: enabled}}>
             <div className="user-modal">
-                <div class="cancel-button">
-                    <img onClick={handleCancel} src={process.env.PUBLIC_URL + "images/design/X_orange.svg"} alt="" />
+                <div className="modal-header">
+
+                    <p>USER #{userId}</p>
+                    <div class="cancel-button">
+                        <img onClick={handleCancel} src={process.env.PUBLIC_URL + "images/design/X_orange.svg"} alt="" />
+                    </div>
                 </div>
 
-                <p className="user-nr">USER #267890</p>
                 <div className="user-details">
-                      <p>Jane Doe</p>
-                      <p>janedoe@gmail.com</p>
+                      <p>{name}</p>
+                      <p>{email}</p>
                  </div>
             </div>
         </div>
