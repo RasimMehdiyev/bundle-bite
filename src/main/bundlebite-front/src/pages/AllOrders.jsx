@@ -20,7 +20,12 @@ const AllOrders = () => {
                       </div>
                 </div>
 
-                <div>
+                <div className="order-grid">
+                    <UserOrderCardComponent />
+                    <UserOrderCardComponent />
+                    <UserOrderCardComponent />
+                    <UserOrderCardComponent />
+                    <UserOrderCardComponent />
                     <UserOrderCardComponent />
                 </div>
 
