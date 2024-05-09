@@ -22,7 +22,11 @@ const UserOrderCardComponent = ({card, updateQuantity}) => {
 
                   <div class="order-details">
                     <span class="order-date">PLACED ON 01/05/2024</span>
-                    <span class="order-status">STATUS: <strong>Received</strong></span>
+                    <span class="order-status">
+                      STATUS:
+                      <span class="status-circle"></span>
+                      <strong>Received</strong>
+                    </span>
                     <span class="order-total">TOTAL <span class="order-amount">$62</span></span>
                   </div>
 
