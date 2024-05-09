@@ -1,5 +1,5 @@
-import React from "react";
-import OrderModalComponent from "./OrderModalComponent";
+import React, { useState } from "react";
+import UserModalComponent from "./UserModalComponent";
 
 
 
@@ -12,12 +12,18 @@ const UserOrderCardComponent = ({
       total,
       }) => {
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const statusColors = {
       "Received": "#D9D9D9",
       "Confirmed": "#654BFF",
       "Out for delivery": "#4BFFFF",
       "Delivered": "#4BFF53",
     };
+
+    const toggleModal = () => {
+        setIsModalOpen(!isModalOpen);
+      };
 
     const statusCircleColor = statusColors[status] || "#D9D9D9";
 
@@ -26,7 +32,12 @@ const UserOrderCardComponent = ({
         <div class="order-summary">
               <div class="order-header">
                 <span class="order-number">ORDER #{orderId}</span>
-                <span class="user-number">USER #{userId}</span>
+                <span
+                    className="user-number"
+                    style={{ cursor: "pointer", textDecoration: "underline" }}
+                     onClick={toggleModal}>
+                     ORDER #{userId}
+                     </span>
               </div>
 
               <div class="under-header">
@@ -43,18 +54,18 @@ const UserOrderCardComponent = ({
                     <span class="order-status">
                       STATUS:
                       <span
-                                    className="status-circle"
-                                    style={{
-                                      backgroundColor: statusCircleColor,
-
-                                    }}
-                                  ></span>
+                         className="status-circle"
+                          style={{
+                              backgroundColor: statusCircleColor,
+                          }}
+                          ></span>
                       <strong>{status}</strong>
                     </span>
                     <span class="order-total">TOTAL <span class="order-amount">${total}</span></span>
                   </div>
 
               </div>
+              {isModalOpen && <UserModalComponent />}
         </div>
 
     )

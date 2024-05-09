@@ -173,7 +173,7 @@ input{
 .order-modal{
     width: 500px;
     height:300px;
-    background-color: #FEF5F1;
+    background-color: white;
     position: fixed;
     z-index: 50px;
     top: 35%;
