@@ -7,9 +7,6 @@ const UserModalComponent = ({enabled, onCancel, onConfirm}) => {
         onCancel();
     }
 
-    const handleConfirm = () => {
-        onConfirm();
-    }
 
     return(
         <div className="user-modal-bg" style={{display: enabled}}>

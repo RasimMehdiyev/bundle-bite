@@ -12,7 +12,6 @@ const UserOrderCardComponent = ({
       total,
       }) => {
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const statusColors = {
       "Received": "#D9D9D9",
@@ -21,9 +20,17 @@ const UserOrderCardComponent = ({
       "Delivered": "#4BFF53",
     };
 
-    const toggleModal = () => {
-        setIsModalOpen(!isModalOpen);
-      };
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+        const openModal = () => {
+            setIsModalOpen(true);
+        };
+
+
+        const closeModal = () => {
+            setIsModalOpen(false);
+        };
 
     const statusCircleColor = statusColors[status] || "#D9D9D9";
 
@@ -35,7 +42,7 @@ const UserOrderCardComponent = ({
                 <span
                     className="user-number"
                     style={{ cursor: "pointer", textDecoration: "underline" }}
-                     onClick={toggleModal}>
+                     onClick={openModal}>
                      ORDER #{userId}
                      </span>
               </div>
@@ -65,7 +72,7 @@ const UserOrderCardComponent = ({
                   </div>
 
               </div>
-              {isModalOpen && <UserModalComponent />}
+              <UserModalComponent enabled={isModalOpen ? "block" : "none"} onCancel={closeModal} />
         </div>
 
     )
