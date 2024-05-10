@@ -28,10 +28,6 @@ const YourOrdersPage = () => {
                 <div className="header-container">
                       <h1 className="header">YOUR ORDERS</h1>
                       <div className="search-container">
-                         {/*
-                         <FontAwesomeIcon icon={faSearch} className="search-icon" />
-                         <input className="search-bar" type="text" placeholder="#ORDER"/>
-                         */}
                         <p style={{fontFamily: 'Inter', marginBottom:'0px'}}> SORT BY</p>
                         <form>
                                 <label for="checkbox1" style={{ marginRight: '10px', fontSize: '20px'}}>
@@ -54,6 +50,13 @@ const YourOrdersPage = () => {
                         </form>
 
                       </div>
+
+                      {/*
+                      <div className="search-container">
+                           <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                           <input className="search-bar" type="text" placeholder="#ORDER"/>
+                      </div>
+                      */}
                 </div>
 
                 <div className="order-grid">
