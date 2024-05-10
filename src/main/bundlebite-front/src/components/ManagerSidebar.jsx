@@ -42,18 +42,7 @@ const ManagerSidebar = ({ activeLink }) => {
                 </div>
             ) : (
                 <div className='sidebar'>
-                    <a
-                        href="/profile"
-                        className={activeLink === "/profile" ? "active-link" : ""}
-                    >YOUR PROFILE</a>
-                    <a
-                        href="/all-orders"
-                        className={activeLink === "/all-orders" ? "active-link" : ""}
-                    >ORDERS</a>
-                    <a
-                        href="/all-users"
-                        className={activeLink === "/all-users" ? "active-link" : ""}
-                    >USERS</a>
+
 
                     <a
                         href="/login"

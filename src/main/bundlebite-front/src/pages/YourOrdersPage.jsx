@@ -1,22 +1,22 @@
 import React from "react";
-
-import ManagerSidebar from "../components/ManagerSidebar.jsx";
+import SidebarComponent from "../components/SidebarComponent.jsx";
+import UserOrderCardComponent from "../components/UserOrderCardComponent.jsx";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import UserOrderCardComponent from "../components/UserOrderCardComponent.jsx";
 
-const AllOrders = () => {
-    
+
+const YourOrdersPage = () => {
+
 
     return(
         <div className="all" >
-            <ManagerSidebar activeLink="/all-orders"/>
+            <SidebarComponent activeLink="/all-orders"/>
             <div className="right-section">
                 <div className="header-container">
-                      <h1 className="header">ORDERS</h1>
+                      <h1 className="header">YOUR ORDERS</h1>
                       <div className="search-container">
-                          <FontAwesomeIcon icon={faSearch} className="search-icon" />
-                          <input className="search-bar" type="text" placeholder="#ORDER/USER"/>
+                         <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                         <input className="search-bar" type="text" placeholder="#ORDER"/>
                       </div>
                 </div>
 
@@ -32,7 +32,6 @@ const AllOrders = () => {
                           { quantity: 1, name: "POKE BOWL" }
                         ]}
                       total="62"
-                      showUserId="true"
                     />
 
                     <UserOrderCardComponent
@@ -46,7 +45,6 @@ const AllOrders = () => {
                           { quantity: 1, name: "POKE BOWL" }
                         ]}
                         total="62"
-                        showUserId="true"
                     />
 
                      <UserOrderCardComponent
@@ -60,7 +58,6 @@ const AllOrders = () => {
                            { quantity: 1, name: "POKE BOWL" }
                            ]}
                            total="62"
-                           showUserId="true"
                      />
 
                      <UserOrderCardComponent
@@ -74,7 +71,6 @@ const AllOrders = () => {
                             { quantity: 1, name: "POKE BOWL" }
                             ]}
                             total="62"
-                            showUserId="true"
                       />
 
                      <UserOrderCardComponent
@@ -88,7 +84,6 @@ const AllOrders = () => {
                             { quantity: 1, name: "POKE BOWL" }
                             ]}
                             total="62"
-                            showUserId="true"
                      />
 
                      <UserOrderCardComponent
@@ -102,13 +97,16 @@ const AllOrders = () => {
                              { quantity: 1, name: "POKE BOWL" }
                              ]}
                              total="62"
-                             showUserId="true"
                       />
                 </div>
 
             </div>
         </div>
-    )
-}
 
-export default AllOrders;
+
+
+        )
+           }
+
+
+export default YourOrdersPage;

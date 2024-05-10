@@ -10,6 +10,7 @@ const UserOrderCardComponent = ({
       status,
       items,
       total,
+      showUserId,
       }) => {
 
 
@@ -39,12 +40,15 @@ const UserOrderCardComponent = ({
         <div class="order-summary">
               <div class="order-header">
                 <span class="order-number">ORDER #{orderId}</span>
-                <span
-                    className="user-number"
-                    style={{ cursor: "pointer", textDecoration: "underline" }}
-                     onClick={openModal}>
-                     USER #{userId}
-                     </span>
+                {showUserId && (
+                          <span
+                            className="user-number"
+                            style={{ cursor: "pointer", textDecoration: "underline" }}
+                            onClick={openModal}
+                          >
+                            USER #{userId}
+                          </span>
+                        )}
               </div>
 
               <div class="under-header">

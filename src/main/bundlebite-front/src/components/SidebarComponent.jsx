@@ -23,8 +23,8 @@ const SidebarComponent = ({ activeLink }) => {
                         className={activeLink === "/profile" ? "active-link" : ""}
                     >YOUR PROFILE</a>
                     <a
-                        href="/orders"
-                        className={activeLink === "/orders" ? "active-link" : ""}
+                        href="/your-orders"
+                        className={activeLink === "/your-orders" ? "active-link" : ""}
                     >YOUR ORDERS</a>
                     <a
                         onClick={() => {
@@ -39,14 +39,7 @@ const SidebarComponent = ({ activeLink }) => {
                 </div>
             ) : (
                 <div className='sidebar'>
-                    <a
-                        href="/profile"
-                        className={activeLink === "/profile" ? "active-link" : ""}
-                    >YOUR PROFILE</a>
-                    <a
-                        href="/orders"
-                        className={activeLink === "/orders" ? "active-link" : ""}
-                    >YOUR ORDERS</a>
+
 
                     <a
                         href="/login"
