@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth, signOutUser } from "../auth";
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
 const ManagerSidebar = ({ activeLink }) => {
     const navigate = useNavigate();
@@ -54,17 +54,15 @@ const ManagerSidebar = ({ activeLink }) => {
                         href="/all-users"
                         className={activeLink === "/all-users" ? "active-link" : ""}
                     >USERS</a>
-                    <a
-                        href="/signup"
-                        id="btnSignUp"
-                        className={activeLink === "/signup" ? "active-link" : ""}
-                        style={{ marginTop: '30px' }}
-                    >SIGN UP</a>
+
                     <a
                         href="/login"
                         id="btnSignIn"
                         className={activeLink === "/login" ? "active-link" : ""}
-                    >LOG IN</a>
+                        style={{ marginTop: '30px' }}
+                    >
+                    <FontAwesomeIcon icon={faSignInAlt} style={{ marginRight: '8px' }} />
+                    LOG IN</a>
                 </div>
             )}
         </>
