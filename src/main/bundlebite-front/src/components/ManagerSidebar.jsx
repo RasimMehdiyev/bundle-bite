@@ -1,6 +1,8 @@
 import React from 'react';
 import { useAuth, signOutUser } from "../auth";
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 const ManagerSidebar = ({ activeLink }) => {
     const navigate = useNavigate();
@@ -27,13 +29,16 @@ const ManagerSidebar = ({ activeLink }) => {
                     <a
                         href="/all-users"
                         className={activeLink === "/all-users" ? "active-link" : ""}
-                    >USERS</a>
+                    >CUSTOMERS</a>
                     <a
                         onClick={() => {
                             handleLogout();
                         }}
                         className={activeLink === "/login" ? "active-link" : ""}
-                    >LOG OUT</a>
+                        style={{ marginTop: '30px' }}
+                    >
+                    <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '8px' }} flip="horizontal" />
+                    LOG OUT</a>
                 </div>
             ) : (
                 <div className='sidebar'>
