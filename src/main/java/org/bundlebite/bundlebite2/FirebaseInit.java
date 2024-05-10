@@ -4,7 +4,6 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import org.springframework.stereotype.Component;
-// firebase admin sdk
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
@@ -20,7 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.util.Base64;
-// import java.util.Base64.Decoder;
+import java.util.List;
+import org.bundlebite.bundlebite2.User;
+import java.util.ArrayList;
 
 @Component
 public class FirebaseInit {
@@ -53,6 +54,8 @@ public class FirebaseInit {
                 claims.put("role", "manager");
                 auth.setCustomUserClaims(user.getUid(), claims);
                 logger.info("Successfully set custom claims for: {}", user.getEmail());
+                
+
 
                 // Refresh user details to print updated custom claims
                 user = auth.getUserByEmail("rasim_manager@gmail.com");
@@ -65,4 +68,19 @@ public class FirebaseInit {
             logger.error("IO Exception during Firebase initialization: {}", e.getMessage());        
         }
     }
+
+    public static void setCustomerClaimsToUndefined(List<User> users){
+        try {
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            for (User user : users) {
+                UserRecord userRecord = auth.getUserByEmail(user.getEmail());
+                Map<String, Object> claims = new HashMap<>();
+                claims.put("role", "customer");
+                auth.setCustomUserClaims(userRecord.getUid(), claims);
+                logger.info("Successfully set custom claims for: {}", user.getEmail());
+            }
+        } catch (FirebaseAuthException fae) {
+            logger.error("Firebase Auth Exception: {}", fae.getMessage());
+        }
+    }   
 }

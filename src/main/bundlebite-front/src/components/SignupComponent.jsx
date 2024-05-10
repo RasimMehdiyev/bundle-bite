@@ -8,7 +8,11 @@ const SignupComponent = () => {
   
     const handleSubmit = (e) => {
       e.preventDefault();
-      signUp(email, password);
+      signUp(email, password)
+      .then(() => {
+        console.log("Signed up successfully");
+      })
+
     };
 
     return(

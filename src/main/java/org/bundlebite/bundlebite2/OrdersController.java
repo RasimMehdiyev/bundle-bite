@@ -18,9 +18,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import org.bundlebite.bundlebite2.Order;
 import org.springframework.web.bind.annotation.RequestParam;
-// PathVariable
 import org.springframework.web.bind.annotation.PathVariable;
-// logger
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bundlebite.bundlebite2.Meal;
@@ -77,47 +75,79 @@ public class OrdersController {
         return orders;
     }
 
-@GetMapping("/api/orders/by-user/{userId}")
-public List<Order> getOrdersByUser(@PathVariable String userId) {
-    List<Order> orders = new ArrayList<>();
-    try {
-        Firestore firestore = FirestoreClient.getFirestore();
-        CollectionReference ordersRef = firestore.collection("orders");
+    @GetMapping("/api/orders/by-user/{userId}")
+    public List<Order> getOrdersByUser(@PathVariable String userId) {
+        List<Order> orders = new ArrayList<>();
+        try {
+            Firestore firestore = FirestoreClient.getFirestore();
+            CollectionReference ordersRef = firestore.collection("orders");
 
-        // Assuming `user` is stored as a reference, like /users/userId
-        DocumentReference userRef = firestore.document("users/" + userId);
-        Query query = ordersRef.whereEqualTo("user", userRef);
-        ApiFuture<QuerySnapshot> future = query.get();
-        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            // Assuming `user` is stored as a reference, like /users/userId
+            DocumentReference userRef = firestore.document("users/" + userId);
+            Query query = ordersRef.whereEqualTo("user", userRef);
+            ApiFuture<QuerySnapshot> future = query.get();
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
 
-        for (QueryDocumentSnapshot document : documents) {
-            try {
-                Order order = new Order();
-                List<DocumentReference> itemRefs = (List<DocumentReference>) document.get("items");
-                List<Meal> items = new ArrayList<>();
-                for (DocumentReference itemRef : itemRefs) {
-                    ApiFuture<DocumentSnapshot> mealFuture = itemRef.get();
-                    DocumentSnapshot mealSnapshot = mealFuture.get();
-                    Meal item = mealSnapshot.toObject(Meal.class);
-                    items.add(item);
+            for (QueryDocumentSnapshot document : documents) {
+                try {
+                    Order order = new Order();
+                    List<DocumentReference> itemRefs = (List<DocumentReference>) document.get("items");
+                    List<Meal> items = new ArrayList<>();
+                    for (DocumentReference itemRef : itemRefs) {
+                        ApiFuture<DocumentSnapshot> mealFuture = itemRef.get();
+                        DocumentSnapshot mealSnapshot = mealFuture.get();
+                        Meal item = mealSnapshot.toObject(Meal.class);
+                        items.add(item);
+                    }
+                    order.setUid(document.getId());
+                    order.setUser(document.get("user"));
+                    order.setTotalPrice(document.getDouble("totalPrice"));
+                    order.setStatus(document.getString("status"));
+                    order.setOrderDate(document.getDate("orderDate"));
+                    order.setItems(items);
+                    orders.add(order);
+                } catch (Exception e) {
+                    logger.error("Error mapping document to Order: Document ID = {}", document.getId(), e);
                 }
-                order.setUid(document.getId());
-                order.setUser(document.get("user"));
-                order.setTotalPrice(document.getDouble("totalPrice"));
-                order.setStatus(document.getString("status"));
-                order.setOrderDate(document.getDate("orderDate"));
-                order.setItems(items);
-                orders.add(order);
-            } catch (Exception e) {
-                logger.error("Error mapping document to Order: Document ID = {}", document.getId(), e);
             }
+            logger.info("Successfully fetched and mapped orders for user {}.", userId);
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Failed to fetch orders by user: ", e);
+            throw new RuntimeException("Failed to fetch orders by user", e);
         }
-        logger.info("Successfully fetched and mapped orders for user {}.", userId);
-    } catch (InterruptedException | ExecutionException e) {
-        logger.error("Failed to fetch orders by user: ", e);
-        throw new RuntimeException("Failed to fetch orders by user", e);
+        return orders;
     }
-    return orders;
-}
+
+    @GetMapping("/api/orders/{orderId}")
+    public Order getOrderById(@PathVariable String orderId) {
+        Order order = new Order();
+        try {
+            Firestore firestore = FirestoreClient.getFirestore();
+            DocumentReference orderRef = firestore.collection("orders").document(orderId);
+            ApiFuture<DocumentSnapshot> future = orderRef.get();
+            DocumentSnapshot document = future.get();
+
+            List<DocumentReference> itemRefs = (List<DocumentReference>) document.get("items");
+            List<Meal> items = new ArrayList<>();
+            for (DocumentReference itemRef : itemRefs) {
+                ApiFuture<DocumentSnapshot> mealFuture = itemRef.get();
+                DocumentSnapshot mealSnapshot = mealFuture.get();
+                Meal item = mealSnapshot.toObject(Meal.class);
+                items.add(item);
+            }
+            order.setUid(document.getId());
+            order.setUser(document.get("user"));
+            order.setTotalPrice(document.getDouble("totalPrice"));
+            order.setStatus(document.getString("status"));
+            order.setOrderDate(document.getDate("orderDate"));
+            order.setItems(items);
+            logger.info("Successfully fetched and mapped order: {}", orderId);
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Failed to fetch order: ", e);
+            throw new RuntimeException("Failed to fetch order", e);
+        }
+        return order;
+    }
+
 
 }

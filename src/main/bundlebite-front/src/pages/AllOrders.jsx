@@ -8,16 +8,15 @@ import { getCurrentUser } from "../auth.js";
 const AllOrders = () => {
 
     const  [orders, setOrders] = useState([]);
-    const [filteredOrders, setFilteredOrders] = useState([]);
 
     const fetchOrders = async () => {
         try {
             const user = getCurrentUser();
             console.log('Getting the token and fetching orders...')
-            console.log("User:", user);
+            // console.log("User:", user);
             if (user){
                 const token = await user.getIdToken();
-                console.log("Token:", token);
+                // console.log("Token:", token);
                 console.log("Fetching orders...");
                 await axios.get("/api/orders",{
                     headers: {
@@ -39,11 +38,11 @@ const AllOrders = () => {
     try {
         const currentUser = getCurrentUser();
         console.log('Getting the token and fetching orders...');
-        console.log("User:", user);
+        // console.log("User:", user);
         if (currentUser) {
             const token = await currentUser.getIdToken();
-            console.log("Token:", token);
-            console.log("Fetching orders...");
+            // console.log("Token:", token);
+            console.log("Fetching by userID ...");
             await axios.get(`/api/orders/by-user/${user}`, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -59,7 +58,35 @@ const AllOrders = () => {
     } catch (error) {
         console.error("Error fetching orders:", error.message);
     }
-}
+    }
+    const fetchByOrder = async (order) => {
+        try {
+            const currentUser = getCurrentUser();
+            console.log('Getting the token and fetching orders...');
+            if (currentUser) {
+                const token = await currentUser.getIdToken();
+                console.log("Fetching by order ID...");
+                await axios.get(`/api/orders/${order}`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => {
+                    console.log(response.data);
+                    // it returns object not array
+                    var newOrder = response.data;
+                    var newOrders = [];
+                    newOrders.push(newOrder);
+                    setOrders(newOrders);
+                });
+            }
+    
+        } catch (error) {
+            console.error("Error fetching orders:", error.message);
+        }
+        
+    }
 
 
     useEffect(() => {
@@ -71,6 +98,8 @@ const AllOrders = () => {
         <div>
             <h1>All Orders</h1>
             <a onClick={() => fetchByUser("XpfTV9X9NrW6ywJARZUlqtwtj102")}>fetchByUser</a>
+            <br />
+            <a onClick={() => fetchByOrder("iAAZVgSPfGye0X7049T8")}>fetchByOrder</a>
             {orders.map((order, index) => (
                 <div key={index}>
                     <h3>Order ID: {order.id}</h3>
