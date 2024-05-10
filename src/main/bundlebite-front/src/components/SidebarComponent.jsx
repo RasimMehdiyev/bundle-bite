@@ -18,10 +18,12 @@ const SidebarComponent = ({ activeLink }) => {
         <>
             {user ? (
                 <div className='sidebar'>
-                    <a
-                        href="/profile"
-                        className={activeLink === "/profile" ? "active-link" : ""}
-                    >YOUR PROFILE</a>
+                     <a
+                         href="/shop"
+                         className={activeLink === "/shop" ? "active-link" : ""}
+
+                     >SHOP</a>
+
                     <a
                         href="/your-orders"
                         className={activeLink === "/your-orders" ? "active-link" : ""}
@@ -31,7 +33,7 @@ const SidebarComponent = ({ activeLink }) => {
                             handleLogout();
                         }}
                         className={activeLink === "/login" ? "active-link" : ""}
-                        style={{ marginTop: '30px' }}
+                        style={{ marginTop: '100px' }}
                     >
                         <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '8px' }} flip="horizontal" />
 
@@ -39,13 +41,16 @@ const SidebarComponent = ({ activeLink }) => {
                 </div>
             ) : (
                 <div className='sidebar'>
-
+                     <a
+                         href="/shop"
+                         className={activeLink === "/shop" ? "active-link" : ""}
+                     >SHOP</a>
 
                     <a
                         href="/login"
                         id="btnSignIn"
                         className={activeLink === "/login" ? "active-link" : ""}
-                        style={{ marginTop: '30px' }}
+                        style={{ marginTop: '100px' }}
 
                     >
                     <FontAwesomeIcon icon={faSignInAlt} style={{ marginRight: '8px' }} />

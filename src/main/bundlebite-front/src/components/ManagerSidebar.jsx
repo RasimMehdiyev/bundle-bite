@@ -18,10 +18,11 @@ const ManagerSidebar = ({ activeLink }) => {
         <>
             {user ? (
                 <div className='sidebar'>
-                    <a
-                        href="/profile"
-                        className={activeLink === "/profile" ? "active-link" : ""}
-                    >YOUR PROFILE</a>
+                     <a
+                         href="/shop"
+                         className={activeLink === "/shop" ? "active-link" : ""}
+                     >SHOP</a>
+
                     <a
                         href="/all-orders"
                         className={activeLink === "/all-orders" ? "active-link" : ""}
@@ -35,20 +36,23 @@ const ManagerSidebar = ({ activeLink }) => {
                             handleLogout();
                         }}
                         className={activeLink === "/login" ? "active-link" : ""}
-                        style={{ marginTop: '30px' }}
+                        style={{ marginTop: '100px' }}
                     >
                     <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '8px' }} flip="horizontal" />
                     LOG OUT</a>
                 </div>
             ) : (
                 <div className='sidebar'>
-
+                     <a
+                         href="/shop"
+                         className={activeLink === "/shop" ? "active-link" : ""}
+                     >SHOP</a>
 
                     <a
                         href="/login"
                         id="btnSignIn"
                         className={activeLink === "/login" ? "active-link" : ""}
-                        style={{ marginTop: '30px' }}
+                        style={{ marginTop: '100px' }}
                     >
                     <FontAwesomeIcon icon={faSignInAlt} style={{ marginRight: '8px' }} />
                     LOG IN</a>
