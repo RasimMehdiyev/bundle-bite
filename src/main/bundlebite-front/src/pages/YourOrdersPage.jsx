@@ -28,24 +28,24 @@ const YourOrdersPage = () => {
                 <div className="header-container">
                       <h1 className="header">YOUR ORDERS</h1>
                       <div className="search-container">
-                        <p style={{fontFamily: 'Inter', marginBottom:'0px'}}> SORT BY</p>
+                        <p style={{fontFamily: 'Inter', marginBottom:'0px'}}> SORT BY DATE</p>
                         <form>
                                 <label for="checkbox1" style={{ marginRight: '10px', fontSize: '20px'}}>
                                     <input type="checkbox"
-                                    name="date"
-                                    checked={isCheckboxChecked('date')}
+                                    name="newest"
+                                    checked={isCheckboxChecked('newest')}
                                     onChange={handleCheckboxChange}
                                     style={{fontFamily: 'Inter', transform: "scale(1.5)", marginRight: '10px', verticalAlign: 'middle'}}></input>
-                                    DATE
+                                    NEWEST FIRST
                                 </label>
 
                                 <label for="checkbox2" style={{ marginRight: '10px', fontSize: '20px'}}>
                                     <input type="checkbox"
-                                    name="price"
-                                    checked={isCheckboxChecked('price')}
+                                    name="oldest"
+                                    checked={isCheckboxChecked('oldest')}
                                     onChange={handleCheckboxChange}
                                     style={{fontFamily: 'Inter', transform: "scale(1.5)", marginRight: '10px', verticalAlign: 'middle'}}></input>
-                                    PRICE
+                                    OLDEST FIRST
                                 </label>
                         </form>
 
