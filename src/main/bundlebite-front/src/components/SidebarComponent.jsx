@@ -29,7 +29,7 @@ const SidebarComponent = ({ activeLink }) => {
                             handleLogout();
                         }}
                         className={activeLink === "/login" ? "active-link" : ""}
-                    >LOGOUT</a>
+                    >LOG OUT</a>
                 </div>
             ) : (
                 <div className='sidebar'>
@@ -50,7 +50,7 @@ const SidebarComponent = ({ activeLink }) => {
                         href="/login"
                         id="btnSignIn"
                         className={activeLink === "/login" ? "active-link" : ""}
-                    >SIGN IN</a>
+                    >LOG IN</a>
                 </div>
             )}
         </>
