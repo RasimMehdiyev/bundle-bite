@@ -7,7 +7,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 const AllUsers = () => {
     return(
         <div className="all">
-            <ManagerSidebar activeLink="/all-users"/>
+            <ManagerSidebar activeLink="/all-users" username="Jane Doe"/>
             <div className="customers">
                 <div className="header-container">
                     <h1 className="header">CUSTOMERS</h1>

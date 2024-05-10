@@ -23,7 +23,7 @@ const YourOrdersPage = () => {
 
     return(
         <div className="all" >
-            <SidebarComponent activeLink="/your-orders"/>
+            <SidebarComponent activeLink="/your-orders" username="John Doe"/>
             <div className="right-section">
                 <div className="header-container">
                       <h1 className="header">YOUR ORDERS</h1>

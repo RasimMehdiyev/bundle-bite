@@ -50,7 +50,7 @@ const OrdersPage = () => {
 
     return(
         <div className="page" id="content-div">
-            <SidebarComponent />
+            <SidebarComponent username="John Doe"/>
                 <div className="orders">
                     <p className="cart-title">YOUR CART</p>
                 {cards.map(card => (
