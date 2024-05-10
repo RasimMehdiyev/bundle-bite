@@ -1,13 +1,13 @@
 
-.customer-list{
+.customers{
     margin-left: 50px;
     margin-right: 50px;
     width: 100%;
 }
 
 .user-card{
-    padding-top: 7px;
-    padding-bottom: 7px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     padding-left: 20px;
     padding-right: 20px;
     background-color: white;
@@ -15,7 +15,9 @@
     border-radius: 20px;
     align-items: left;
     margin-bottom: 20px;
+    width: 350px;
 }
+
 
 .user-card-header{
     color: #FF8C00;
@@ -29,15 +31,10 @@
     padding-bottom: 10px;
 }
 
-.user-card-content button{
-    width: 200px;
-    align-self: flex-end;
-    margin-top: auto;
-    background-color: white;
-    color: #65C9DF;
-    border: 2px solid #65C9DF;
-    border-radius: 20px;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-family: Inter, sans-serif;
+
+.customer-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 10px;
+    justify-items: center;
 }

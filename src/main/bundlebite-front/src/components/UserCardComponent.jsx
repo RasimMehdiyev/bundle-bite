@@ -22,7 +22,6 @@ const UserCardComponent = ({
                       <p> {name} </p>
                       <p>{email} </p>
                   </div>
-                  <button>SEE ORDERS</button>
               </div>
 
         </div>

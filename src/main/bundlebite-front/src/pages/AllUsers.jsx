@@ -8,7 +8,7 @@ const AllUsers = () => {
     return(
         <div className="all">
             <ManagerSidebar activeLink="/all-users"/>
-            <div className="customer-list">
+            <div className="customers">
                 <div className="header-container">
                     <h1 className="header">CUSTOMERS</h1>
                     <div className="search-container">
@@ -16,8 +16,16 @@ const AllUsers = () => {
                         <input className="search-bar" type="text" placeholder="#USER"/>
                     </div>
                 </div>
-                <UserCardComponent userId="25001976" name="Jane Doe" email="janedoe@gmail.com"/>
-                <UserCardComponent userId="25001976" name="Jane Doe" email="janedoe@gmail.com"/>
+                <div className="customer-grid">
+                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
+                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
+                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
+                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
+                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
+                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
+                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
+                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
+                </div>
 
             </div>
         </div>
