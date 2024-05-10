@@ -36,7 +36,6 @@ public class FirebaseInit {
 
         try {
             logger.info("Initializing Firebase...");
-            // InputStream serviceAccount = this.getClass().getClassLoader().getResourceAsStream("./bundle-bite-firebase-adminsdk-sz26n-016d7718b6.json");
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccountStream))

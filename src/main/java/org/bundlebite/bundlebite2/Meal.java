@@ -1,4 +1,5 @@
 package org.bundlebite.bundlebite2;
+import com.google.firebase.database.PropertyName;
 
 public class Meal{
     private String name;
@@ -32,10 +33,11 @@ public class Meal{
         this.id = id;
     }
 
+    @PropertyName("price")
     public double getPrice() {
         return price;
     }
-
+    @PropertyName("price")
     public void setPrice(double price) {
         this.price = price;
     }
