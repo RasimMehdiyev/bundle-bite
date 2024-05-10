@@ -34,19 +34,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/**/*").authenticated()
+                .antMatchers("/api/**").hasAuthority("manager")
                 .anyRequest().permitAll()
                 .and()
                 .addFilterBefore(this.securityFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
-    // @Bean
-    // public UserDetailsService userDetailsService() {
-    //     UserDetails user = User.withDefaultPasswordEncoder()
-    //         .username("user")
-    //         .password("password")
-    //         .roles("USER")
-    //         .build();
-    //     return new InMemoryUserDetailsManager(user);
-    // }
 }

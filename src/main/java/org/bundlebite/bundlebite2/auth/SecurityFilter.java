@@ -8,6 +8,12 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
+import java.util.stream.Collectors;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+    
+
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -16,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
@@ -23,30 +30,39 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 
+// logger
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
-    private static final String SECRET_KEY = "7TrZM6ptlaOkiCxFZ0lTY7fY6ChKlE6aQjT4Sj/ZJ4Q=";
+     private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-        try {
-            Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-            String email = claims.getSubject();
-            String role = (String) claims.get("role");
+            token = token.substring(7);  // Remove Bearer prefix
+            try {
+                FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+                String email = decodedToken.getEmail();
+                String role = decodedToken.getClaims().get("role").toString();
 
-            var user = new User(email, role);
-            SecurityContext context = SecurityContextHolder.getContext();
-            context.setAuthentication(new FirebaseAuthentication(user));
-        }
-        catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+                logger.info("User email: {}", email);
+                logger.info("User role: {}", role);
+
+            List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
+
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    decodedToken.getEmail(), null, authorities);
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (Exception e) {
+                logger.error("Firebase Authentication failed", e);
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
         }
         filterChain.doFilter(request, response);
     }

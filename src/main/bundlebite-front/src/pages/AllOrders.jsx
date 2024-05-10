@@ -1,43 +1,66 @@
 import React from "react";
 import axios from "axios";
+import { useEffect } from "react";
+import { useState } from "react";
+import { getCurrentUser } from "../auth.js";
+
 
 const AllOrders = () => {
 
-    const auth = {
-        username: 'user',
-        password: 'password'
-    }
-
+    const  [orders, setOrders] = useState([]);
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get("/api/orders");
-            console.log(response.data);
+            const user = getCurrentUser();
+            console.log('Getting the token and fetching orders...')
+            console.log("User:", user);
+            if (user){
+                const token = await user.getIdToken();
+                console.log("Token:", token);
+                console.log("Fetching orders...");
+                await axios.get("/api/orders",{
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => {
+                    console.log(response.data);
+                    setOrders(response.data);
+                });
+            }
+
         } catch (error) {
             console.error("Error fetching orders:", error.message);
         }
     }
 
-    return(
+    useEffect(() => {
+        fetchOrders();
+    }   , []);
+    
+
+    return (
         <div>
             <h1>All Orders</h1>
-            <div className="order">
-                <span className="order-id">Order ID: 1</span>
-                <span className="order-date">Order Date: 01/01/2021</span>
-                <span className="order-status">Order Status: Pending</span>
-            </div>
-            <div className="order">
-                <span className="order-id">Order ID: 2</span>
-                <span className="order-date">Order Date: 02/01/2021</span>
-                <span className="order-status">Order Status: Shipped</span>
-            </div>
-            <div className="order">
-                <span className="order-id">Order ID: 3</span>
-                <span className="order-date">Order Date: 03/01/2021</span>
-                <span className="order-status">Order Status: Delivered</span>
-            </div>
+            {orders.map((order, index) => (
+                <div key={index}>
+                    <h3>Order ID: {order.id}</h3>
+                    <p>Order Date: {order.orderDate}</p>
+                    <p>Order Status: {order.status}</p>
+                    <p>Order Total: {order.total}</p>
+                    <p>Order Items:</p>
+                    <ul>
+                        {order.items && order.items.map((item, idx) => (
+                            <li key={idx}>
+                                {item.name} - Quantity: {item.quantity} x {item.price} = {item.quantity * item.price}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
         </div>
-    )
+    );
 }
 
 export default AllOrders;

@@ -29,6 +29,7 @@ public class FirebaseInit {
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setDatabaseUrl("https://bundle-bite.europe-west1.firebaseio.com")
                     .build();
 
             FirebaseApp.initializeApp(options);
