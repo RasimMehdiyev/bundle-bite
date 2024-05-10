@@ -23,7 +23,7 @@ const HeaderComponent = () => {
                 */}
 
 
-                <a href="">
+                <a href="/orders">
                     <img className="cart" src={process.env.PUBLIC_URL + "/images/shopping-cart.svg"} alt="" />
                 </a>
             </div>
