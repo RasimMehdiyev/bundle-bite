@@ -13,12 +13,12 @@ const SignupComponent = () => {
 
     return(
         <div className="auth-main">
-            <h1>SIGN UP</h1>
+            <h1 className="login-header">SIGN UP</h1>
             <form className="auth" onSubmit={handleSubmit}>
                 <input type="email" id="email" name="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="Email"></input>
                 <input type="password" id="password" name="password" value={password} onChange={e => setPassword(e.target.value)} required placeholder="Password"></input>
                 <input type="password" id="confirm-password" name="confirm-password" required placeholder="Confirm password"></input>
-                <button type="submit">SIGN UP</button>
+                <button type="submit">SAVE</button>
             </form>
         </div>
     )

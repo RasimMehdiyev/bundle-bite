@@ -58,6 +58,7 @@ const ManagerSidebar = ({ activeLink }) => {
                         href="/signup"
                         id="btnSignUp"
                         className={activeLink === "/signup" ? "active-link" : ""}
+                        style={{ marginTop: '30px' }}
                     >SIGN UP</a>
                     <a
                         href="/login"
