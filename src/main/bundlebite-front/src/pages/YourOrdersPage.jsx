@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import SidebarComponent from "../components/SidebarComponent.jsx";
 import UserOrderCardComponent from "../components/UserOrderCardComponent.jsx";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,6 +8,19 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 const YourOrdersPage = () => {
 
 
+      const [selectedCheckbox, setSelectedCheckbox] = useState('');
+
+
+      const handleCheckboxChange = (event) => {
+        setSelectedCheckbox(event.target.name);
+      };
+
+      const isCheckboxChecked = (name) => {
+        return selectedCheckbox === name;
+      };
+
+
+
     return(
         <div className="all" >
             <SidebarComponent activeLink="/all-orders"/>
@@ -15,8 +28,31 @@ const YourOrdersPage = () => {
                 <div className="header-container">
                       <h1 className="header">YOUR ORDERS</h1>
                       <div className="search-container">
+                         {/*
                          <FontAwesomeIcon icon={faSearch} className="search-icon" />
                          <input className="search-bar" type="text" placeholder="#ORDER"/>
+                         */}
+                        <p style={{fontFamily: 'Inter', marginBottom:'0px'}}> SORT BY</p>
+                        <form>
+                                <label for="checkbox1" style={{ marginRight: '10px', fontSize: '20px'}}>
+                                    <input type="checkbox"
+                                    name="date"
+                                    checked={isCheckboxChecked('date')}
+                                    onChange={handleCheckboxChange}
+                                    style={{fontFamily: 'Inter', transform: "scale(1.5)", marginRight: '10px', verticalAlign: 'middle'}}></input>
+                                    DATE
+                                </label>
+
+                                <label for="checkbox2" style={{ marginRight: '10px', fontSize: '20px'}}>
+                                    <input type="checkbox"
+                                    name="price"
+                                    checked={isCheckboxChecked('price')}
+                                    onChange={handleCheckboxChange}
+                                    style={{fontFamily: 'Inter', transform: "scale(1.5)", marginRight: '10px', verticalAlign: 'middle'}}></input>
+                                    PRICE
+                                </label>
+                        </form>
+
                       </div>
                 </div>
 
