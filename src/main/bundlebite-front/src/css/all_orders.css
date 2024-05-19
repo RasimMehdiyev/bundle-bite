@@ -55,8 +55,6 @@
     font-size: 1.5em;
   }
 
-  //order card
-
   .order-summary {
     display: flex;
     flex-direction: column;
@@ -114,3 +112,10 @@
   .user-number {
       color: #FF8C00;
     }
+
+.order-cards{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 20px;
+}

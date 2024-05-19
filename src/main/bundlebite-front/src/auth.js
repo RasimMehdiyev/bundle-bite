@@ -1,8 +1,9 @@
 import { auth , db, collection, setDoc, addDoc, doc, getDoc} from './firebase-config';
-import {createUserWithEmailAndPassword, onAuthStateChanged ,signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import {createUserWithEmailAndPassword, onAuthStateChanged ,signInWithEmailAndPassword, signOut, updateProfile} from "firebase/auth";
 import { useState, useEffect } from 'react';
 
 // Sign up function
+
 export const signUp = async (email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password)
@@ -10,8 +11,7 @@ export const signUp = async (email, password) => {
       // Signed in
       const user = userCredential.user;
       const usersRef = doc(db, "users", user.uid);
-      console.log("Signed up:", user);
-      // Add user to the database
+
       setDoc(usersRef, {
         email: email,
         uid: user.uid,
@@ -28,6 +28,7 @@ export const signUp = async (email, password) => {
 export const signIn = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    
     console.log("Signed in:", userCredential.user);
   } catch (error) {
     console.error("Error signing in:", error.message);
@@ -53,44 +54,39 @@ export const getCurrentUser = () => {
 export const useAuth = () =>{
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [role, setRole] = useState("");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
+      setRole(user.getIdTokenResult().then((idTokenResult) => {
+        console.log("User role:", idTokenResult.claims.role);
+        return idTokenResult.claims.role;
+      }));
     });
     return unsubscribe;
   }, []);
 
-  return { user, loading };
+  return { user, loading, role};
 }
 
 export const getUserRole = async () => {
   const user = getCurrentUser();
-  if (user) {
-    const userRef = await doc(db, "users", user.uid);
-    const docSnap = await getDoc(userRef);
-    if (docSnap.exists()) {
-      return docSnap.data().role;
-     }
+  if (user){
+    const idTokenResult = await user.getIdTokenResult();
+    return idTokenResult.claims.role;
   }
-  return null;
 }
 
-// export const addOrder = async (order) => {
+onAuthStateChanged(auth, (user) => {
+  if (user){
+    user.getIdToken(true)
+    user.getIdTokenResult()
+    .then((idTokenResult) => {
+      console.log("User role:", idTokenResult.claims.role);
+      return idTokenResult.claims.role;
+    })
+  }
+});
 
-//   try {
-//     const user = getCurrentUser();
-//     if (user) {
-//       const ordersRef = collection(db, "orders");
-//       const orderRef = await addDoc(ordersRef, {
-//         ...order,
-//         uid: user.uid,
-//         status: "pending"
-//       });
-//       console.log("Order added with ID: ", orderRef.id);
-//     }
-//   } catch (error) {
-//     console.error("Error adding order:", error.message);
-//   }
-// }

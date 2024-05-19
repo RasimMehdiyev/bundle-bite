@@ -8,7 +8,9 @@ ProductCard.propTypes = {
     price: PropTypes.string,
     name: PropTypes.string
 };
+
 const Homepage = () => {
+
     return (
         <div className="page" id="contentdiv">
             <SidebarComponent />

@@ -36,3 +36,5 @@ build/
 *.node_modules/
 **/src/main/bundlebite-front/node
 *.node/
+### env variables ###
+.env

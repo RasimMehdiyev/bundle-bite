@@ -20,20 +20,23 @@ const UserOrderCardComponent = ({card, updateQuantity}) => {
 
         <div class="order-summary">
               <div class="order-header">
-                <span class="order-number">ORDER #25781976</span>
-                <span class="user-number">USER #25001976</span>
+                <span class="order-number">ORDER #{card.uid}</span>
+                <span class="user-number">USER #{card.user}</span>
               </div>
 
               <ul class="order-items">
-                <li>2x VODKA PASTA</li>
-                <li>2x BEEF TARTAR</li>
-                <li>1x POKE BOWL</li>
+                {card.items.map((item, index) => {
+                    return (
+                        <li key={index}>{item.quantity}x {item.name}</li>
+                    )
+                }
+                )}
               </ul>
 
               <div class="order-details">
-                <span class="order-date">PLACED ON 01/05/2024</span>
-                <span class="order-status">STATUS: <strong>Received</strong></span>
-                <span class="order-total">TOTAL $62</span>
+                <span class="order-date">PLACED ON {card.orderDate}</span>
+                <span class="order-status">STATUS: <strong>{card.status}</strong></span>
+                <span class="order-total">TOTAL ${card.totalPrice}</span>
               </div>
         </div>
 
