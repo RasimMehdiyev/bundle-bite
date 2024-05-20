@@ -7,7 +7,8 @@
 
     .right-section {
       flex: 1;
-      padding-left: 40px;
+      padding-left: 50px;
+      padding-right: 50px;
     }
 
   .header{
@@ -24,8 +25,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
     margin-bottom: 20px;
-    margin-right:40px;
+
   }
 
   .search-bar {
@@ -35,6 +37,7 @@
     border-radius: 10px;
     padding: 10px 50px 10px 50px;
     font-size: 1em;
+    text-align: left;
   }
 
   .search-bar::placeholder {
@@ -55,67 +58,147 @@
     font-size: 1.5em;
   }
 
-  .order-summary {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Space between items */
-    padding: 15px;
 
-    border-radius: 8px;
-    background: #FAFAFA;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    outline: 2px solid red;
-    font-family: Arial, sans-serif;
-  }
+.order-summary {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  gap: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 15px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 450px;
+  font-family: Inter, sans-serif;
+}
 
-  /* Order Header: Order Number and User */
   .order-header {
     display: flex;
-    justify-content: space-between; /* Aligns both numbers to opposite sides */
+    justify-content: space-between;
+    align-items: flex-end;
     font-weight: bold;
-    font-size: 1.5em;
+    font-size: 22px;
     margin-bottom: 10px;
-    color: #FAFAFA; /* Example color for order number */
+    gap: 10px;
+    color: #FAFAFA;
   }
 
-  /* Order Items List */
+  .under-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+
   .order-items {
-    list-style-type: disc; /* Bullet points */
-    padding-left: 20px; /* Indent for the bullets */
+    list-style-type: disc;
+    padding-left: 20px;
     margin: 0;
     color: #333;
   }
 
-  /* Individual item */
+
   .order-items li {
     margin-bottom: 5px;
   }
 
-  /* Order Details like Date, Status, and Total */
-  .order-details {
-    display: flex;
-    justify-content: space-between; /* Evenly distribute the elements horizontally */
-    align-items: center;
-    font-size: 0.9em;
-    color: #666;
-  }
 
-  /* Styling specific to order status */
-  .order-status strong {
-    color: #333; /* Example color for status */
+  .order-details {
+    text-align: right;
+
   }
 
   .order-number {
     color: #65C9DF;
+    font-size: 25px;
   }
 
   .user-number {
       color: #FF8C00;
+      text-align: right;
+      font-size: 15px;
     }
 
-.order-cards{
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  gap: 20px;
-}
+   .order-total {
+     font-size: 14px;
+   }
+
+   .order-amount {
+     font-size: 30px;
+     margin-left: 7px;
+   }
+
+   .order-status {
+     display: flex;
+     justify-content: flex-end;
+     font-size: 15px;
+
+   }
+
+   .status-circle {
+     display: inline-block;
+     width: 18px;
+     height: 18px;
+     border-radius: 50%;
+     margin-left: 10px;
+     margin-right: 5px;
+   }
+
+   .order-grid {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+     gap: 20px;
+   }
+
+
+
+  .user-modal-bg{
+      width: 100%;
+      height: 100%;
+      background-color: rgba(217, 217, 217, 0.75);
+      position: fixed;
+      z-index: 50px;
+      top: 0;
+      left: 0;
+
+  }
+
+  .user-modal{
+      width: 400px;
+      background-color: white;
+      position: fixed;
+      z-index: 50px;
+      top: 35%;
+      left: 40%;
+      padding-left: 30px;
+      padding-right: 30px;
+      padding-bottom: 10px;
+      border-radius: 20px;
+   }
+
+   .user-details{
+    font-size: 20px;
+    margin-left: 25px;
+   }
+
+  .cancel-button{
+    margin-left: auto;
+    display: flex;
+    cursor: pointer;
+  }
+
+  .modal-header{
+    display: flex;
+    color: #FF8C00;
+    font-weight: bold;
+    font-size: 25px;
+     align-items: center;
+  }
+
+
+
+
+
+
+
+

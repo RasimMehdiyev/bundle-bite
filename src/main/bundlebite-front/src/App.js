@@ -9,6 +9,7 @@ import PrivateRoute from './PrivateRoute.js';
 import ManagerRoute from './ManagerRoute.js';
 import AllUsers from './pages/AllUsers.jsx';
 import AllOrders from './pages/AllOrders.jsx';
+import YourOrdersPage from './pages/YourOrdersPage.jsx';
 
 
 const App = () =>{
@@ -24,11 +25,14 @@ const App = () =>{
                   <Route element={<PrivateRoute/>}>
                     <Route path="/orders" element={<OrdersPage />} />
                     <Route path="/suppliers" element={<SuppliersPage />} />
-
+                    <Route path="/your-orders" element={<YourOrdersPage />} />
                   </Route>
                   <Route element={<ManagerRoute/>}>
                     <Route path="/all-orders" element={<AllOrders />} />
                     <Route path="/all-users" element={<AllUsers />} />
+                  </Route>
+                  <Route element={<ManagerRoute/>}>
+
                   </Route>
                   <Route path="/" element={<Homepage />} />
                   <Route path="*" element={<Homepage />} />

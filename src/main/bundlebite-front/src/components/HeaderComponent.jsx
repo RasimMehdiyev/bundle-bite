@@ -8,6 +8,7 @@ const HeaderComponent = () => {
                     <img src={process.env.PUBLIC_URL + "/images/logologo.svg"} alt='LOGO' />
                     {process.env.PUBLIC_URL}
                 </a>
+                {/*
                 <div className="nav-menu">
                     <a className="nav-links" href="/">
                         HOME
@@ -19,7 +20,10 @@ const HeaderComponent = () => {
                         SUPPLIERS
                     </a>
                 </div>
-                <a href="">
+                */}
+
+
+                <a href="/orders">
                     <img className="cart" src={process.env.PUBLIC_URL + "/images/shopping-cart.svg"} alt="" />
                 </a>
             </div>

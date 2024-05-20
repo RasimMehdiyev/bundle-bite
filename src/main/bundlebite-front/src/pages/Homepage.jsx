@@ -13,7 +13,7 @@ const Homepage = () => {
 
     return (
         <div className="page" id="contentdiv">
-            <SidebarComponent />
+            <SidebarComponent activeLink="/shop" username="John Doe"/>
             <div className="main-content">
                 <h1 className="contentdiv-h1">OUR INGREDIENT BUNDLES</h1>
                 <div className="products-grid">
