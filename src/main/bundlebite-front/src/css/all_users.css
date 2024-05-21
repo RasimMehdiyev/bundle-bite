@@ -24,6 +24,11 @@
     font-weight: bold;
     font-size: 25px;
     font-family: Inter, sans-serif;
+    /* text overflow */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
 }
 .user-card-content{
     display: flex;

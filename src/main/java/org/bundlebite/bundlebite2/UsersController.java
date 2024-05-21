@@ -44,6 +44,11 @@ public class UsersController{
                     logger.info("Email: {}", document.getString("email"));
                     user.setRole(document.getString("role"));
                     logger.info("Role: {}", document.getString("role"));
+                    user.setUid(document.getId());
+                    logger.info("User ID: {}", document.getId());
+                    user.setName(document.getString("name"));
+                    logger.info("Name: {}", document.getString("name"));
+
                     users.add(user);
                     if (user.getRole() == null) {
                         undefinedRoleUsers.add(user);
@@ -58,5 +63,21 @@ public class UsersController{
             logger.error(e.getMessage());
         }
         return users;
+    }
+    public User getUserById(String id) {
+        User user = new User();
+        try {
+            Firestore firestore = FirestoreClient.getFirestore();
+            DocumentReference docRef = firestore.collection("users").document(id);
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            DocumentSnapshot document = future.get();
+            if (document.exists()) {
+                user.setEmail(document.getString("email"));
+                user.setRole(document.getString("role"));
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return user;
     }
 }

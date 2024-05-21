@@ -21,7 +21,6 @@ const AllOrders = () => {
             // console.log("User:", user);
             if (user){
                 const token = await user.getIdToken();
-                // console.log("Token:", token);
                 console.log("Fetching orders...");
                 await axios.get("/api/orders",{
                     headers: {
@@ -110,8 +109,22 @@ const AllOrders = () => {
                           <input className="search-bar" type="text" placeholder="#ORDER/USER"/>
                       </div>
                 </div>
-
                 <div className="order-grid">
+                    {orders.map(order => (
+                        <UserOrderCardComponent
+                            key={order.uid}
+                            orderId={order.uid}
+                            userId={order.user}
+                            date={order.orderDate.slice(0,10)}
+                            status={order.status}
+                            items={order.items}
+                            total={order.totalPrice}
+                            showUserId="true"
+                        />
+                    ))}
+                </div>
+
+                {/* <div className="order-grid">
                     <UserOrderCardComponent
                       orderId="O25781976"
                       userId="U25001976"
@@ -195,12 +208,7 @@ const AllOrders = () => {
                              total="62"
                              showUserId="true"
                       />
-                </div>
-
-                {/* <div>
-                    <UserOrderCardComponent card={card} />
                 </div> */}
-
             </div>
         </div>
     );

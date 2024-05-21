@@ -6,7 +6,7 @@ import org.bundlebite.bundlebite2.Meal;
 
 public class Order {
     private String uid;
-    private Object user;
+    private String user;
     private double totalPrice;
     private String status;
     private Date orderDate;
@@ -18,7 +18,7 @@ public class Order {
     }
 
     // Constructor
-    public Order(String uid, double totalPrice, String status, Date orderDate, List <Meal> items, Object user) {
+    public Order(String uid, double totalPrice, String status, Date orderDate, List <Meal> items, String user) {
         this.uid = uid;
         this.user = user;
         this.totalPrice = totalPrice;
@@ -36,12 +36,12 @@ public class Order {
         this.uid = uid;
     }
 
-    public Object getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(Object userID) {
-        this.user = user;
+    public void setUser(String userID) {
+        this.user = userID;
     }
 
     public double getTotalPrice() {

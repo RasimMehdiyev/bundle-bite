@@ -54,14 +54,13 @@ const AllUsers = () => {
                     </div>
                 </div>
                 <div className="customer-grid">
-                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
-                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
-                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
-                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
-                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
-                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
-                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
-                    <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/>
+                    {
+                        users.map((user, index) => (
+                            <UserCardComponent key={index} userId={user.uid} name={user.name} email={user.email}/>
+                        ))
+                    
+                    }
+                    {/* <UserCardComponent userId="U25001976" name="Jane Doe" email="janedoe@gmail.com"/> */}
                 </div>
 
             </div>

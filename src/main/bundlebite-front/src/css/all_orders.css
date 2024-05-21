@@ -111,12 +111,18 @@
   .order-number {
     color: #65C9DF;
     font-size: 25px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .user-number {
       color: #FF8C00;
       text-align: right;
       font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
    .order-total {

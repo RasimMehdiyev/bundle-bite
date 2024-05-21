@@ -51,16 +51,24 @@ public class OrdersController {
                     }
                     order.setUid(document.getId());
                     logger.info("Order ID: {}", document.getId());
-                    order.setUser(document.get("user"));
-                    logger.info("User: {}", document.get("user"));
+
+                    DocumentReference userRef = (DocumentReference) document.get("user");
+                    String userID = userRef.getId();
+                    order.setUser(userID);
+                    logger.info("User: {}", order.getUser());
+                    
                     order.setTotalPrice(document.getDouble("totalPrice"));
                     logger.info("Total Price: {}", document.getDouble("totalPrice"));
+                    
                     order.setStatus(document.getString("status"));
                     logger.info("Status: {}", document.getString("status"));
+                    
                     order.setOrderDate(document.getDate("orderDate"));
                     logger.info("Order Date: {}", document.getDate("orderDate"));
+                    
                     order.setItems(items);
                     logger.info("Items: {}", items);
+                    
                     orders.add(order);
             
                 } catch (Exception e) {
@@ -100,7 +108,9 @@ public class OrdersController {
                         items.add(item);
                     }
                     order.setUid(document.getId());
-                    order.setUser(document.get("user"));
+                    // DocumentReference userRef = (DocumentReference) document.get("user");
+                    String userID = userRef.getId();
+                    order.setUser(userID);
                     order.setTotalPrice(document.getDouble("totalPrice"));
                     order.setStatus(document.getString("status"));
                     order.setOrderDate(document.getDate("orderDate"));
@@ -136,7 +146,9 @@ public class OrdersController {
                 items.add(item);
             }
             order.setUid(document.getId());
-            order.setUser(document.get("user"));
+            DocumentReference userRef = (DocumentReference) document.get("user");
+            String userID = userRef.getId();
+            order.setUser(userID);
             order.setTotalPrice(document.getDouble("totalPrice"));
             order.setStatus(document.getString("status"));
             order.setOrderDate(document.getDate("orderDate"));
