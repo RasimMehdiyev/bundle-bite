@@ -64,6 +64,48 @@ public class UsersController{
         }
         return users;
     }
+
+    @GetMapping("/api/customers")
+    public List<User> getAllCustomers() {
+        List<User> users = new ArrayList<>();
+        List<User> undefinedRoleUsers = new ArrayList<>();
+        try {
+            Firestore firestore = FirestoreClient.getFirestore();
+            ApiFuture<QuerySnapshot> future = firestore.collection("users").get();
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments(); // Correct type here
+
+            for (QueryDocumentSnapshot document : documents) {
+                try {
+                    User user = new User();
+                    user.setEmail(document.getString("email"));
+                    logger.info("Email: {}", document.getString("email"));
+                    user.setRole(document.getString("role"));
+                    logger.info("Role: {}", document.getString("role"));
+                    user.setUid(document.getId());
+                    logger.info("User ID: {}", document.getId());
+                    user.setName(document.getString("name"));
+                    logger.info("Name: {}", document.getString("name"));
+
+                    if (user.getRole()=="customer") {
+                        users.add(user);
+                    }
+
+
+                    if (user.getRole() == null) {
+                        undefinedRoleUsers.add(user);
+                    }
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                }
+            }
+            // if (undefinedRoleUsers.size() > 0)
+            //     FirebaseInit.setCustomerClaimsToUndefined(undefinedRoleUsers);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return users;
+    }
+
     public User getUserById(String id) {
         User user = new User();
         try {

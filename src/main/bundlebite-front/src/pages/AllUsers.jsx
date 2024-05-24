@@ -12,7 +12,7 @@ const AllUsers = () => {
     const  [users, setUsers] = useState([]);
 
 
-    const fetchAllUsers = async () => {
+    const fetchAllCustomers = async () => {
         try {
             const user = getCurrentUser();
             console.log('Getting the token and fetching users...')
@@ -20,7 +20,7 @@ const AllUsers = () => {
                 const token = await user.getIdToken();
                 // console.log("Token:", token);
                 console.log("Fetching users...");
-                await axios.get("/api/users",{
+                await axios.get("/api/customers",{
                     headers: {
                         "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json"
@@ -39,7 +39,7 @@ const AllUsers = () => {
     }   
 
     useEffect(() => {
-        fetchAllUsers();
+        fetchAllCustomers();
     }, []);
 
     return(
