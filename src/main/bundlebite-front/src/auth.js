@@ -51,24 +51,28 @@ export const getCurrentUser = () => {
   return auth.currentUser;
 };
 
-export const useAuth = () =>{
+// Updated useAuth hook
+export const useAuth = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState("");
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
       setLoading(false);
-      setRole(user.getIdTokenResult().then((idTokenResult) => {
+      if (currentUser) {
+        const idTokenResult = await currentUser.getIdTokenResult();
+        setRole(idTokenResult.claims.role || 'customer'); // Default to 'customer' if no role is set
         console.log("User role:", idTokenResult.claims.role);
-        return idTokenResult.claims.role;
-      }));
+      } else {
+        setRole(""); // Clear role if no user is signed in
+      }
     });
     return unsubscribe;
   }, []);
 
-  return { user, loading, role};
+  return { user, loading, role };
 }
 
 export const getUserRole = async () => {
