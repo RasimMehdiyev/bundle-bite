@@ -6,6 +6,7 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 
 import org.bundlebite.bundlebite2.FirebaseInit;
+import org.bundlebite.bundlebite2.Ingredient;
 import org.bundlebite.bundlebite2.Meal;
 import org.bundlebite.bundlebite2.Order;
 import org.bundlebite.bundlebite2.FirebaseInit;
@@ -40,14 +41,46 @@ public class HomepageUtil {
         System.out.println("Hello from homepage util!");
 
         Map<String,Integer> map = HomepageUtil.getAllQuantitiesFromSuppliers(suppliers);
-        FirebaseInit firebaseInit = new FirebaseInit();
+        FirebaseInitDummy firebaseInit = new FirebaseInitDummy();
         firebaseInit.initialize();
         List<Meal> meals = getMealsFirebase();
 
         for (Meal m: meals){
             System.out.println("Meal id is " + m.getId() + " and the name is " + m.getName());
+            List<Ingredient> ings = m.getIngredients();
+            System.out.println("Ingredient of meal: \n ");
+            for (Ingredient ing: ings){
+                System.out.printf("idLink %s, quantity %d%n", ing.getIdLink(), ing.getQuantity());
+            }
         }
+        System.out.println("Actual ingredients");
         printMap(map);
+        List<Meal> finalMeals = checkAvailability(map, meals);
+        for (Meal m: finalMeals){
+            System.out.printf("meal %s's availability is %s%n", m.getName(), m.getAvailability());
+        }
+        
+    }
+
+    public static List<Meal> checkAvailability(Map<String, Integer> actualIngredients, List<Meal> meals){
+        for (Meal meal : meals) {
+            boolean isAvailable = true;
+            
+            for (Ingredient ingredient : meal.getIngredients()) {
+                String idLink = ingredient.getIdLink();
+                int requiredQuantity = ingredient.getQuantity();
+
+                // Check if the ingredient is available in the required quantity
+                if (!actualIngredients.containsKey(idLink) || actualIngredients.get(idLink) < requiredQuantity) {
+                    isAvailable = false;
+                    break;
+                }
+            }
+            
+            // Set the availability of the meal
+            meal.setAvailability(isAvailable);
+        }
+        return meals;
     }
 
     public static Map<String,Integer> getAllQuantitiesFromSuppliers(String[] suppliers){
@@ -157,10 +190,31 @@ public class HomepageUtil {
                     meal.setId(document.getId());
                     logger.info("Meal id {}", document.getId());
                     meal.setName(document.getString("name"));
-                    meal.setPrice(document.getDouble("price"));                    
-                    
+                    meal.setPrice(document.getDouble("price"));
+
+                    List<Map<String, Object>> ingredientsList = (List<Map<String, Object>>) document.get("ingredients");
+                    List<Ingredient> ingredients = new ArrayList<>();
+
+                    if (ingredientsList != null) {
+                        for (Map<String, Object> ingredientMap : ingredientsList) {
+                            String ingredientName = (String) ingredientMap.get("name");
+                            int quantity = ((Long) ingredientMap.get("quantity")).intValue(); // Firebase stores numbers as Long
+                            String link = (String) ingredientMap.get("link");
+
+                            if (link != null && link.startsWith("/")) {
+                                link = link.substring(1);
+                            }    
+
+                            Ingredient ingredient = new Ingredient(link, ingredientName, quantity); // Assuming 0 for id and price as placeholders
+
+                            ingredients.add(ingredient);
+                        }
+                    }
+
+                    meal.setIngredients(ingredients);
                     meals.add(meal);
                 } catch (Exception e) {
+                    System.out.println(e);
                     //logger.error("Error mapping document to Order: Document ID = {}", document.getId(), e);
                 }
             }
