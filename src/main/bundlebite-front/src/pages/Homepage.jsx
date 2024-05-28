@@ -2,6 +2,8 @@ import React from "react";
 import * as PropTypes from "prop-types";
 import ProductCard from "../components/ProductCard.jsx";
 import SidebarComponent from "../components/SidebarComponent.jsx";
+import axios from 'axios';
+import { useState, useEffect } from "react";
 
 ProductCard.propTypes = {
     img: PropTypes.string,
@@ -11,12 +13,28 @@ ProductCard.propTypes = {
 
 const Homepage = () => {
 
+    const [meals, setMeals] = useState([]);
+
+    useEffect(() => {
+        // Fetch the meals from the API endpoint
+        console.log("test");
+        axios.get('/publicApi/homepageMeals')
+            .then(response => {
+                setMeals(response.data);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error("There was an error fetching the meals!", error);
+            });
+    }, []);
+
     return (
         <div className="page" id="contentdiv">
             <SidebarComponent activeLink="/shop" username="John Doe"/>
             <div className="main-content">
                 <h1 className="contentdiv-h1">OUR INGREDIENT BUNDLES</h1>
                 <div className="products-grid">
+                    {/*
                     <ProductCard img={process.env.PUBLIC_URL + "/images/design/souvlaki.png"} name="SOUVLAKI" price="10" />
                     <ProductCard img={process.env.PUBLIC_URL + "/images/design/shah.png"} name="SHAH PILAF" price="22" />
                     <ProductCard img={process.env.PUBLIC_URL + "/images/design/chili.png"} name="CHILI CON CARNE" price="22" />
@@ -27,6 +45,18 @@ const Homepage = () => {
                     <ProductCard img={process.env.PUBLIC_URL + "/images/design/pasta.png"} name="VODKA PASTA" price="13" />
                     <ProductCard img={process.env.PUBLIC_URL + "/images/design/pizza.png"} name="PIZZA" price="17" />
                     <ProductCard img={process.env.PUBLIC_URL + "/images/design/spanakopita.png"} name="SPANAKOPITA" price="7" />
+                    */}
+                    
+                    {meals.map(meal => (
+                        <ProductCard 
+                            key={meal.id} 
+                            img={process.env.PUBLIC_URL + "/images/design/" + meal.imagePath} 
+                            name={meal.name} 
+                            price={meal.price.toString()} 
+                        />
+                    ))}
+                    *
+                    <p></p>
                 </div>
             </div>
         </div>

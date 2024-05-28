@@ -10,15 +10,25 @@ public class Meal{
     private int quantity;
     private List<Ingredient> ingredients;
     private boolean availability;
+    private String imagePath;
 
     public Meal() {
     }
 
-    public Meal(String name, String id, double price, int quantity) {
+    public Meal(String name, String id, double price, int quantity, String imagePath) {
         this.name = name;
         this.id = id;
         this.price = price;
         this.quantity = quantity;
+        this.imagePath = imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 
     public void setAvailability(boolean availability) {

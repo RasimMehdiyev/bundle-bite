@@ -82,6 +82,23 @@
     align-items: center;
     padding-bottom: 21px;
   }
+
+  .product-not-available::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(128, 128, 128, 0.5); /* Semi-transparent gray overlay */
+    border-radius: 20px;
+    z-index: 1; /* Ensure it is above other content */
+  }
+  
+  .product-not-available * {
+    opacity: 0.5; /* Make content slightly transparent */
+    z-index: 2; /* Ensure content is above the overlay */
+  }
   
   .product-img{
     margin-top: 21px;
