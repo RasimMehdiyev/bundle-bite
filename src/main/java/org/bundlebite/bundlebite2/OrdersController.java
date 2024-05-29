@@ -161,5 +161,44 @@ public class OrdersController {
         return order;
     }
 
+    @GetMapping("/user/your-orders/{userId}")
+    public Order getOrderByUserId(@PathVariable String userId) {
+        Order order = new Order();
+        try {
+            Firestore firestore = FirestoreClient.getFirestore();
+            CollectionReference ordersRef = firestore.collection("orders");
+            DocumentReference userRef = firestore.document("users/" + userId);
+            Query query = ordersRef.whereEqualTo("user", userRef);
+            ApiFuture<QuerySnapshot> future = query.get();
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                try {
+                    List<DocumentReference> itemRefs = (List<DocumentReference>) document.get("items");
+                    List<Meal> items = new ArrayList<>();
+                    for (DocumentReference itemRef : itemRefs) {
+                        ApiFuture<DocumentSnapshot> mealFuture = itemRef.get();
+                        DocumentSnapshot mealSnapshot = mealFuture.get();
+                        Meal item = mealSnapshot.toObject(Meal.class);
+                        items.add(item);
+                    }
+                    order.setUid(document.getId());
+                    String userID = userRef.getId();
+                    order.setUser(userID);
+                    order.setTotalPrice(document.getDouble("totalPrice"));
+                    order.setStatus(document.getString("status"));
+                    order.setOrderDate(document.getDate("orderDate"));
+                    order.setItems(items);
+                } catch (Exception e) {
+                    logger.error("Error mapping document to Order: Document ID = {}", document.getId(), e);
+                }
+            }
+            logger.info("Successfully fetched and mapped orders for user {}.", userId);
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Failed to fetch orders by user: ", e);
+            throw new RuntimeException("Failed to fetch orders by user", e);
+        }
+        return order;
+    }
+
 
 }

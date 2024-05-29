@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SidebarComponent from "../components/SidebarComponent.jsx";
+import axios from "axios";
 import UserOrderCardComponent from "../components/UserOrderCardComponent.jsx";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-
+import { useAuth } from "../auth.js";
 
 const YourOrdersPage = () => {
 
 
       const [selectedCheckbox, setSelectedCheckbox] = useState('');
-
+      const { user, role, loading } = useAuth();
 
       const handleCheckboxChange = (event) => {
         setSelectedCheckbox(event.target.name);
@@ -18,6 +17,25 @@ const YourOrdersPage = () => {
       const isCheckboxChecked = (name) => {
         return selectedCheckbox === name;
       };
+
+      const fetchMyOrders = async () => {
+        try {
+          console.log('Fetching orders...');
+          console.log(user);
+          await axios.get(`/user/your-orders/${user.uid}`)
+          .then(response => {
+            console.log(response.data);
+          });
+        } catch (error) {
+          console.error("Error fetching orders:", error.message);
+        }          
+      }
+
+      useEffect(() => {
+        fetchMyOrders();
+      }
+      , []);
+
 
 
 
@@ -51,12 +69,6 @@ const YourOrdersPage = () => {
 
                       </div>
 
-                      {/*
-                      <div className="search-container">
-                           <FontAwesomeIcon icon={faSearch} className="search-icon" />
-                           <input className="search-bar" type="text" placeholder="#ORDER"/>
-                      </div>
-                      */}
                 </div>
 
                 <div className="order-grid">

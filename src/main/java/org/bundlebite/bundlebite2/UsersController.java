@@ -86,7 +86,7 @@ public class UsersController{
                     user.setName(document.getString("name"));
                     logger.info("Name: {}", document.getString("name"));
 
-                    if (user.getRole()=="customer") {
+                    if (user.getRole()!="manager") {
                         users.add(user);
                     }
 

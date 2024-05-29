@@ -70,8 +70,9 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI().substring(request.getContextPath().length());
-        return !path.startsWith("/api");
+        return !path.startsWith("/api") && !path.startsWith("/user");
     }
+
 
     private static class FirebaseAuthentication implements Authentication {
         private final User user;
