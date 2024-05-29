@@ -107,13 +107,15 @@ public class UsersController{
     }
 
     @GetMapping("/api/customers/{id}")
-    public User getUserById(String id) {
+    public User getUserById(@PathVariable  String id) {
         User user = new User();
         try {
             Firestore firestore = FirestoreClient.getFirestore();
             DocumentReference docRef = firestore.collection("users").document(id);
+            logger.info("User ID: {}", id);
             ApiFuture<DocumentSnapshot> future = docRef.get();
             DocumentSnapshot document = future.get();
+            logger.info("Document: {}", document);
             if (document.exists()) {
 
                 user.setEmail(document.getString("email"));
