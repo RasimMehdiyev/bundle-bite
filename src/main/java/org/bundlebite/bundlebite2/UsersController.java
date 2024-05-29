@@ -106,6 +106,7 @@ public class UsersController{
         return users;
     }
 
+    @GetMapping("/api/customers/{id}")
     public User getUserById(String id) {
         User user = new User();
         try {
@@ -114,8 +115,12 @@ public class UsersController{
             ApiFuture<DocumentSnapshot> future = docRef.get();
             DocumentSnapshot document = future.get();
             if (document.exists()) {
+
                 user.setEmail(document.getString("email"));
                 user.setRole(document.getString("role"));
+                user.setUid(id);
+                user.setName(document.getString("name"));
+
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
