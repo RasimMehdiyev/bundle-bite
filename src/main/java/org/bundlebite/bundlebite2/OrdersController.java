@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bundlebite.bundlebite2.Meal;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 
 @RestController
 public class OrdersController {
@@ -159,6 +162,53 @@ public class OrdersController {
             throw new RuntimeException("Failed to fetch order", e);
         }
         return order;
+    }
+
+    @GetMapping("/users/orders/")
+    // get userId from the Bearer token and fetch orders for that user
+    public List<Order> getYourOrders() {
+        List<Order> orders = new ArrayList<>();
+        try {
+            // get current authenticated user from the token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userId = (String) authentication.getDetails();
+            logger.info("Authenticated user: {}", userId);
+            Firestore firestore = FirestoreClient.getFirestore();
+            DocumentReference userRef = firestore.collection("users").document(userId);
+            CollectionReference ordersRef = firestore.collection("orders");
+            Query query = ordersRef.whereEqualTo("user", userRef);
+            ApiFuture<QuerySnapshot> future = query.get();
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            logger.info("Successfully fetched orders for user {}.", userRef.getId());
+            for (QueryDocumentSnapshot document : documents) {
+                try {
+                    Order order = new Order();
+                    List<DocumentReference> itemRefs = (List<DocumentReference>) document.get("items");
+                    List<Meal> items = new ArrayList<>();
+                    for (DocumentReference itemRef : itemRefs) {
+                        ApiFuture<DocumentSnapshot> mealFuture = itemRef.get();
+                        DocumentSnapshot mealSnapshot = mealFuture.get();
+                        Meal item = mealSnapshot.toObject(Meal.class);
+                        items.add(item);
+                    }
+                    order.setUid(document.getId());
+                    String userID = userRef.getId();
+                    order.setUser(userID);
+                    order.setTotalPrice(document.getDouble("totalPrice"));
+                    order.setStatus(document.getString("status"));
+                    order.setOrderDate(document.getDate("orderDate"));
+                    order.setItems(items);
+                    orders.add(order);
+                } catch (Exception e) {
+                    logger.error("Error mapping document to Order: Document ID = {}", document.getId(), e);
+                }
+            }
+            logger.info("Successfully fetched and mapped orders for user {}.", userRef.getId());
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Failed to fetch orders by user: ", e);
+            throw new RuntimeException("Failed to fetch orders by user", e);
+        }
+        return orders;
     }
 
 

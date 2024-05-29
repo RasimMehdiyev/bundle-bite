@@ -48,14 +48,14 @@ public class SecurityFilter extends OncePerRequestFilter {
                 FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
                 String email = decodedToken.getEmail();
                 String role = decodedToken.getClaims().get("role").toString();
-
-                logger.info("User email: {}", email);
-                logger.info("User role: {}", role);
+                String uid = decodedToken.getUid();
 
             List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     decodedToken.getEmail(), null, authorities);
+
+            ((UsernamePasswordAuthenticationToken) authentication).setDetails(decodedToken.getUid());
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
@@ -70,7 +70,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI().substring(request.getContextPath().length());
-        return !path.startsWith("/api");
+        return !path.startsWith("/api") && !path.startsWith("/users");
     }
 
     private static class FirebaseAuthentication implements Authentication {

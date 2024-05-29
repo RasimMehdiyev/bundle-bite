@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import SidebarComponent from "../components/SidebarComponent.jsx";
 import UserOrderCardComponent from "../components/UserOrderCardComponent.jsx";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { getCurrentUser } from "../auth.js";
+import { useEffect } from "react";
+import axios from "axios";
 
 
 const YourOrdersPage = () => {
 
 
       const [selectedCheckbox, setSelectedCheckbox] = useState('');
-
+      const [orders, setOrders] = useState([]);
 
       const handleCheckboxChange = (event) => {
         setSelectedCheckbox(event.target.name);
@@ -19,7 +20,35 @@ const YourOrdersPage = () => {
         return selectedCheckbox === name;
       };
 
+      const fetchYourOrders = async () => {
+        try {
+            const user = getCurrentUser();
+            console.log('Getting the token and fetching orders...')
+            if (user){
+                const token = await user.getIdToken();
+                // console.log("Token:", token);
+                console.log("Fetching orders...");
+                await axios.get("/users/orders/",{
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => {
+                    console.log(response.data);
+                    setOrders(response.data);
+                });
+            }
+    
+        } catch (error) {
+            console.error("Error fetching orders:", error.message);
+        
+        }
+      }
 
+      useEffect(() => {
+        fetchYourOrders();
+      }, []);
 
     return(
         <div className="all" >
@@ -48,95 +77,20 @@ const YourOrdersPage = () => {
                                     OLDEST FIRST
                                 </label>
                         </form>
-
                       </div>
-
-                      {/*
-                      <div className="search-container">
-                           <FontAwesomeIcon icon={faSearch} className="search-icon" />
-                           <input className="search-bar" type="text" placeholder="#ORDER"/>
-                      </div>
-                      */}
                 </div>
 
                 <div className="order-grid">
-                    <UserOrderCardComponent
-                      orderId="O25781976"
-                      userId="U25001976"
-                      date="01/05/2024"
-                      status="Received"
-                      items={[
-                          { quantity: 2, name: "VODKA PASTA" },
-                          { quantity: 2, name: "BEEF TARTAR" },
-                          { quantity: 1, name: "POKE BOWL" }
-                        ]}
-                      total="62"
-                    />
-
-                    <UserOrderCardComponent
-                      orderId="O25781976"
-                      userId="U25001976"
-                      date="01/05/2024"
-                      status="Out for delivery"
-                      items={[
-                          { quantity: 2, name: "VODKA PASTA" },
-                          { quantity: 2, name: "BEEF TARTAR" },
-                          { quantity: 1, name: "POKE BOWL" }
-                        ]}
-                        total="62"
-                    />
-
-                     <UserOrderCardComponent
-                        orderId="O25781976"
-                        userId="U25001976"
-                        date="01/05/2024"
-                        status="Confirmed"
-                        items={[
-                           { quantity: 2, name: "VODKA PASTA" },
-                           { quantity: 2, name: "BEEF TARTAR" },
-                           { quantity: 1, name: "POKE BOWL" }
-                           ]}
-                           total="62"
-                     />
-
-                     <UserOrderCardComponent
-                         orderId="O25781976"
-                         userId="U25001976"
-                         date="01/05/2024"
-                         status="Confirmed"
-                         items={[
-                            { quantity: 2, name: "VODKA PASTA" },
-                            { quantity: 2, name: "BEEF TARTAR" },
-                            { quantity: 1, name: "POKE BOWL" }
-                            ]}
-                            total="62"
-                      />
-
-                     <UserOrderCardComponent
-                         orderId="O25781976"
-                         userId="U25001976"
-                         date="01/05/2024"
-                         status="Confirmed"
-                         items={[
-                            { quantity: 2, name: "VODKA PASTA" },
-                            { quantity: 2, name: "BEEF TARTAR" },
-                            { quantity: 1, name: "POKE BOWL" }
-                            ]}
-                            total="62"
-                     />
-
-                     <UserOrderCardComponent
-                         orderId="O25781976"
-                         userId="U25001976"
-                         date="01/05/2024"
-                         status="Confirmed"
-                         items={[
-                             { quantity: 2, name: "VODKA PASTA" },
-                             { quantity: 2, name: "BEEF TARTAR" },
-                             { quantity: 1, name: "POKE BOWL" }
-                             ]}
-                             total="62"
-                      />
+                    {orders.map((order) => (
+                                            <UserOrderCardComponent
+                                            orderId={order.uid}
+                                            userId={order.user}
+                                            date={order.orderDate}
+                                            status={order.status}
+                                            items={order.items}
+                                            total={order.totalPrice}
+                                            />
+                                          ))}
                 </div>
 
             </div>
