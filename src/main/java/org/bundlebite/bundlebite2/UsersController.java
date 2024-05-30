@@ -21,6 +21,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.bundlebite.bundlebite2.FirebaseInit;
 import org.bundlebite.bundlebite2.User;
 // import org.bundlebite.bundlebite2.FirebaseInit;
 
@@ -79,5 +85,24 @@ public class UsersController{
             logger.error(e.getMessage());
         }
         return user;
+    }
+
+    @PostMapping("/users/setClaims/")
+    @PreAuthorize("isAuthenticated()")
+    public String updateUser(@RequestBody Object user) {
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userId = (String) authentication.getDetails();
+            logger.info("Authenticated user: {}", userId);
+
+            // set custom claims for the authenticated user
+            FirebaseInit.setUserName(userId, user.name);
+            FirebaseInit.setCustomerRole(userId);
+        }
+        catch(Exception e){
+            logger.error(e.getMessage());
+        }
+
+        return "User updated successfully!";
     }
 }

@@ -82,5 +82,30 @@ public class FirebaseInit {
         } catch (FirebaseAuthException fae) {
             logger.error("Firebase Auth Exception: {}", fae.getMessage());
         }
-    }   
+    }  
+
+    public static void setCustomerRole(String userId){
+        try {
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            UserRecord userRecord = auth.getUser(userId);
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("role", "customer");
+            auth.setCustomUserClaims(userRecord.getUid(), claims);
+            logger.info("Successfully set custom claims for: {}", userRecord.getEmail());
+        } catch (FirebaseAuthException fae) {
+            logger.error("Firebase Auth Exception: {}", fae.getMessage());
+        }
+    } 
+    public static void setUserName(String userId, String name){
+        try {
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            UserRecord userRecord = auth.getUser(userId);
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("name", name);
+            auth.setCustomUserClaims(userRecord.getUid(), claims);
+            logger.info("Successfully set custom claims for: {}", userRecord.getEmail());
+        } catch (FirebaseAuthException fae) {
+            logger.error("Firebase Auth Exception: {}", fae.getMessage());
+        }
+    }
 }

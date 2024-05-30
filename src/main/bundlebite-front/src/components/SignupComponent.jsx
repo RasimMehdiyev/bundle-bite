@@ -1,6 +1,7 @@
 import React from "react";
 import {signUp} from "../auth";
 import {useState} from "react";
+import axios from "axios";
 
 const SignupComponent = () => {
     const [name, setName] = useState('');
@@ -12,6 +13,10 @@ const SignupComponent = () => {
       signUp(email, password)
       .then(() => {
         console.log("Signed up successfully");
+        // update user claims with name and role
+        axios.post("/users/setClaims/", {
+          name: name,
+          })
       })
 
     };
