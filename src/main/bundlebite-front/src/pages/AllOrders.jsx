@@ -18,7 +18,6 @@ const AllOrders = () => {
         try {
             const user = getCurrentUser();
             console.log('Getting the token and fetching orders...')
-            // console.log("User:", user);
             if (user){
                 const token = await user.getIdToken();
                 console.log("Fetching orders...");
@@ -123,92 +122,6 @@ const AllOrders = () => {
                         />
                     ))}
                 </div>
-
-                {/* <div className="order-grid">
-                    <UserOrderCardComponent
-                      orderId="O25781976"
-                      userId="U25001976"
-                      date="01/05/2024"
-                      status="Received"
-                      items={[
-                          { quantity: 2, name: "VODKA PASTA" },
-                          { quantity: 2, name: "BEEF TARTAR" },
-                          { quantity: 1, name: "POKE BOWL" }
-                        ]}
-                      total="62"
-                      showUserId="true"
-                    />
-
-                    <UserOrderCardComponent
-                      orderId="O25781976"
-                      userId="U25001976"
-                      date="01/05/2024"
-                      status="Out for delivery"
-                      items={[
-                          { quantity: 2, name: "VODKA PASTA" },
-                          { quantity: 2, name: "BEEF TARTAR" },
-                          { quantity: 1, name: "POKE BOWL" }
-                        ]}
-                        total="62"
-                        showUserId="true"
-                    />
-
-                     <UserOrderCardComponent
-                        orderId="O25781976"
-                        userId="U25001976"
-                        date="01/05/2024"
-                        status="Confirmed"
-                        items={[
-                           { quantity: 2, name: "VODKA PASTA" },
-                           { quantity: 2, name: "BEEF TARTAR" },
-                           { quantity: 1, name: "POKE BOWL" }
-                           ]}
-                           total="62"
-                           showUserId="true"
-                     />
-
-                     <UserOrderCardComponent
-                         orderId="O25781976"
-                         userId="U25001976"
-                         date="01/05/2024"
-                         status="Confirmed"
-                         items={[
-                            { quantity: 2, name: "VODKA PASTA" },
-                            { quantity: 2, name: "BEEF TARTAR" },
-                            { quantity: 1, name: "POKE BOWL" }
-                            ]}
-                            total="62"
-                            showUserId="true"
-                      />
-
-                     <UserOrderCardComponent
-                         orderId="O25781976"
-                         userId="U25001976"
-                         date="01/05/2024"
-                         status="Confirmed"
-                         items={[
-                            { quantity: 2, name: "VODKA PASTA" },
-                            { quantity: 2, name: "BEEF TARTAR" },
-                            { quantity: 1, name: "POKE BOWL" }
-                            ]}
-                            total="62"
-                            showUserId="true"
-                     />
-
-                     <UserOrderCardComponent
-                         orderId="O25781976"
-                         userId="U25001976"
-                         date="01/05/2024"
-                         status="Confirmed"
-                         items={[
-                             { quantity: 2, name: "VODKA PASTA" },
-                             { quantity: 2, name: "BEEF TARTAR" },
-                             { quantity: 1, name: "POKE BOWL" }
-                             ]}
-                             total="62"
-                             showUserId="true"
-                      />
-                </div> */}
             </div>
         </div>
     );

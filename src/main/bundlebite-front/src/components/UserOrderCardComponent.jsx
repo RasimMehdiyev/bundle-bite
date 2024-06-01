@@ -33,6 +33,24 @@ const UserOrderCardComponent = ({
             setIsModalOpen(false);
         };
 
+
+      const groupedItems = items.reduce((acc, item) => {
+        if (acc[item.name]) {
+          acc[item.name].quantity += 1;
+        } else {
+          acc[item.name] = {
+            name: item.name,
+            quantity: 1,
+          };
+        }
+        console.log(acc);
+        return acc;
+      }
+      , {});
+
+      const itemsArray = Object.values(groupedItems);
+    
+
     const statusCircleColor = statusColors[status] || "#D9D9D9";
 
     return(
@@ -53,9 +71,9 @@ const UserOrderCardComponent = ({
 
               <div class="under-header">
                   <ul class="order-items">
-                    {items.map((item, index) => (
+                    {itemsArray.map((item, index) => (
                                 <li key={index}>
-                                  {item.quantity}x {item.name}
+                                  {item.quantity} x {item.name}
                                 </li>
                     ))}
                   </ul>
