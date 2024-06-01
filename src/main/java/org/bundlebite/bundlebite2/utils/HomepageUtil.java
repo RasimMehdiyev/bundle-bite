@@ -36,31 +36,33 @@ import java.io.StringReader;
 public class HomepageUtil {
     private static final Logger logger = LoggerFactory.getLogger(HomepageUtil.class);
     private final static String[] suppliers = {"animalprods", "vegetables", "generalstore"};
-    private final static boolean areSuppliersLocal = true;
-    // public static void main(String[] args) {
-    //     System.out.println("Hello from homepage util!");
+    private final static boolean areSuppliersLocal = false;
+    public static void main(String[] args) {
+        System.out.println("Hello from homepage util!");
 
-    //     Map<String,Integer> map = HomepageUtil.getAllQuantitiesFromSuppliers(suppliers);
-    //     FirebaseInitDummy firebaseInit = new FirebaseInitDummy();
-    //     firebaseInit.initialize();
-    //     List<Meal> meals = getMealsFirebase();
+        Map<String,Integer> map = HomepageUtil.getAllQuantitiesFromSuppliers(suppliers);
+        FirebaseInitDummy firebaseInit = new FirebaseInitDummy();
+        firebaseInit.initialize();
+        List<Meal> meals = getMealsFirebase();
+        System.out.println("map is:");
+        printMap(map);
 
-    //     for (Meal m: meals){
-    //         System.out.println("Meal id is " + m.getId() + " and the name is " + m.getName());
-    //         List<Ingredient> ings = m.getIngredients();
-    //         System.out.println("Ingredient of meal: \n ");
-    //         for (Ingredient ing: ings){
-    //             System.out.printf("idLink %s, quantity %d%n", ing.getIdLink(), ing.getQuantity());
-    //         }
-    //     }
-    //     System.out.println("Actual ingredients");
-    //     printMap(map);
-    //     List<Meal> finalMeals = checkAvailability(map, meals);
-    //     for (Meal m: finalMeals){
-    //         System.out.printf("meal %s's availability is %s%n", m.getName(), m.getAvailability());
-    //     }
+        for (Meal m: meals){
+            System.out.println("Meal id is " + m.getId() + " and the name is " + m.getName());
+            List<Ingredient> ings = m.getIngredients();
+            System.out.println("Ingredient of meal: \n ");
+            for (Ingredient ing: ings){
+                System.out.printf("idLink %s, quantity %d%n", ing.getIdLink(), ing.getQuantity());
+            }
+        }
+        System.out.println("Actual ingredients");
+        printMap(map);
+        List<Meal> finalMeals = checkAvailability(map, meals);
+        for (Meal m: finalMeals){
+            System.out.printf("meal %s's availability is %s%n", m.getName(), m.getAvailability());
+        }
         
-    // }
+    }
 
     public static List<Meal> getMealsForHomepage(){
         Map<String,Integer> map = HomepageUtil.getAllQuantitiesFromSuppliers(suppliers);
@@ -126,7 +128,20 @@ public class HomepageUtil {
                         
                 }
             } else {
-                throw new Exception("Not local suppliers is not supported yet");
+                switch (supplier) {
+                    case "animalprods":
+                        urlString = "http://20.250.163.126:8081/animalprods";
+                        break;
+                    case "vegetables":
+                        urlString = "http://191.235.235.155:8082/vegetables";
+                        break;
+                    case "generalstore":
+                        urlString = "http://20.250.163.126:8083/generalstore";
+                        break;
+                    default:
+                        throw new Exception("Supplier unknown");
+                        
+                }
             }
                 
             URL url = new URL(urlString);
@@ -201,7 +216,7 @@ public class HomepageUtil {
                     logger.info("Meal id {}", document.getId());
                     meal.setName(document.getString("name"));
                     meal.setPrice(document.getDouble("price"));
-                    meal.setImagePath(document.getString("iamgePath"));
+                    meal.setImagePath(document.getString("imagePath"));
 
                     List<Map<String, Object>> ingredientsList = (List<Map<String, Object>>) document.get("ingredients");
                     List<Ingredient> ingredients = new ArrayList<>();

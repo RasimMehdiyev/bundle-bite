@@ -8,7 +8,8 @@ import { useState, useEffect } from "react";
 ProductCard.propTypes = {
     img: PropTypes.string,
     price: PropTypes.string,
-    name: PropTypes.string
+    name: PropTypes.string,
+    availability: PropTypes.bool
 };
 
 const Homepage = () => {
@@ -52,7 +53,9 @@ const Homepage = () => {
                             key={meal.id} 
                             img={process.env.PUBLIC_URL + "/images/design/" + meal.imagePath} 
                             name={meal.name} 
-                            price={meal.price.toString()} 
+                            price={meal.price.toString()}
+                            availability={meal.availability}                            
+                        
                         />
                     ))}
                     *
