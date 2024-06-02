@@ -9,7 +9,6 @@ import org.bundlebite.bundlebite2.FirebaseInit;
 import org.bundlebite.bundlebite2.Ingredient;
 import org.bundlebite.bundlebite2.Meal;
 import org.bundlebite.bundlebite2.Order;
-import org.bundlebite.bundlebite2.FirebaseInit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +40,7 @@ public class HomepageUtil {
         System.out.println("Hello from homepage util!");
 
         Map<String,Integer> map = HomepageUtil.getAllQuantitiesFromSuppliers(suppliers);
-        FirebaseInitDummy firebaseInit = new FirebaseInitDummy();
+        FirebaseInit firebaseInit = new FirebaseInit();
         firebaseInit.initialize();
         List<Meal> meals = getMealsFirebase();
         System.out.println("map is:");

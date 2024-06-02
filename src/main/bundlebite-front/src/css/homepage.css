@@ -1,19 +1,18 @@
-.product-buttons{
+.product-buttons {
     display: flex;
     gap: 10px;
-  }
-  
-  
-  .buttons-text{
+}
+
+.buttons-text {
     display: flex;
     gap: 10px;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  .button-text{
+}
+
+.button-text {
     border-radius: 10px;
-    background: #FFAC4B; 
+    background: #FFAC4B;
     color: #FFF;
     text-align: center;
     font-family: 'Inter', sans-serif;
@@ -21,33 +20,34 @@
     font-weight: 400;
     width: 195px;
     height: 46px;
-    flex-shrink: 0; 
+    flex-shrink: 0;
     cursor: pointer;
     border: none;
-  }
-  .button-text-inverse{
+}
+
+.button-text-inverse {
     border-radius: 10px;
-    background: #FFF; 
+    background: #FFF;
     color: #FFAC4B;
     text-align: center;
     font-family: 'Inter', sans-serif;
     font-size: 18px;
     font-style: normal;
     font-weight: 400;
-    line-height: normal; 
+    line-height: normal;
     width: 104px;
     height: 41px;
-    flex-shrink: 0; 
+    flex-shrink: 0;
     cursor: pointer;
     border: 1px #FFAC4B solid;
-  }
-  .page{
+}
+
+.page {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-  }
-  
-  .contentdiv-h1{
+}
+
+.contentdiv-h1 {
     color: #000;
     text-align: center;
     font-family: "Cabin Sketch", sans-serif;
@@ -55,22 +55,23 @@
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-  }
-  .main-content{
+}
+
+.main-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 40px;
     margin: 0 80px 0 80px;
-  }
-  .products-grid{
-      display:flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 40px;
-      margin-top: 40px;
-  }
-  .product{
+}
+
+.products-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.product {
     width: 247px;
     height: 342px;
     border-radius: 20px;
@@ -81,41 +82,43 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: 21px;
-  }
+}
 
-  .product-not-available {
+.product-not-available {
     width: 247px;
     height: 342px;
     border-radius: 20px;
-    background: #E0E0E0; /* Gray background */
-    box-shadow: none; /* No box-shadow */
+    background: #E0E0E0;
+    /* Gray background */
+    box-shadow: none;
+    /* No box-shadow */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 21px;
-    color: #A0A0A0; /* Optional: Gray text */
-  }
-  
-  
-  
-  .product-img{
+    color: #A0A0A0;
+    /* Optional: Gray text */
+}
+
+.product-img {
     margin-top: 21px;
     width: 195px;
     height: 178px;
-  }
-  .product-name{
+}
+
+.product-name {
     color: #000;
     text-align: center;
     font-family: 'Inter', sans-serif;
     font-size: 22px;
     font-weight: 400;
-  }
+}
 
-  .product-price{
+.product-price {
     color: #000;
     text-align: center;
     font-family: 'Inter', sans-serif;
     font-size: 32px;
     font-weight: 500;
-  }
+}
