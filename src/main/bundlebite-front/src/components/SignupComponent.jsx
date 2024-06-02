@@ -15,8 +15,9 @@ const SignupComponent = () => {
         signUp(email, password, name)
             .then((response) => {
                 console.log("Signed up successfully");
-                navigate("/"); // Redirect to the home page
-                // update user claims with name and role
+                // reload
+                window.location.reload();
+
                 const token = response.token
                 axios.post("/users/setClaims/", {
                     name: name,
@@ -27,6 +28,7 @@ const SignupComponent = () => {
                         },
                     }
                 ).then(() => {
+                    navigate("/");
                     console.log("User claims updated successfully");
                 }).catch((error) => {
                     console.error("Error updating user claims:", error);

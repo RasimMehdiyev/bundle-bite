@@ -74,12 +74,12 @@ export const useAuth = () => {
                 try {
                     const idTokenResult = await currentUser.getIdTokenResult();
                     // print everything in the token
-                    console.log("Token:", idTokenResult.claims);
+                    // console.log("Token:", idTokenResult.claims);
                     // print ev
                     setName(idTokenResult.claims.name || currentUser.displayName);
                     setRole(idTokenResult.claims.role || 'customer'); // Default to 'customer' if no role is set
-                    console.log("User role:", idTokenResult.claims.role);
-                    console.log("User:", user);
+                    // console.log("User role:", idTokenResult.claims.role);
+                    // console.log("User:", user);
                 } catch (error) {
                     console.error("Error fetching user role:", error);
                     setRole(''); // Set role to empty if there's an error
@@ -92,7 +92,7 @@ export const useAuth = () => {
         // Return the unsubscribe function to be called on component unmount
         return unsubscribe;
     }, [user]);
-    console.log("User:", user);
+    // console.log("User:", user);
     return { user, loading, role, name };
 }
 
