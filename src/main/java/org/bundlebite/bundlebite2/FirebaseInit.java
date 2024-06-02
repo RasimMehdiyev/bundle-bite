@@ -5,23 +5,17 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import org.springframework.stereotype.Component;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import com.google.firebase.auth.FirebaseAuthException;
 import java.util.Map;
 import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.github.cdimascio.dotenv.Dotenv;
-import java.util.Base64;
 import java.util.List;
-import org.bundlebite.bundlebite2.User;
-import java.util.ArrayList;
 
 @Component
 public class FirebaseInit {
@@ -48,18 +42,19 @@ public class FirebaseInit {
             try {
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 UserRecord user = auth.getUserByEmail("rasim_manager@gmail.com");
-                System.out.println("Successfully fetched user data: " + user.getEmail());
+                String successMessage = "Successfully set custom claims for: {}";
+                logger.info(successMessage, user.getEmail());
 
                 Map<String, Object> claims = new HashMap<>();
                 claims.put("role", "manager");
                 auth.setCustomUserClaims(user.getUid(), claims);
-                logger.info("Successfully set custom claims for: {}", user.getEmail());
+                logger.info(successMessage, user.getEmail());
                 
 
 
                 // Refresh user details to print updated custom claims
                 user = auth.getUserByEmail("rasim_manager@gmail.com");
-                System.out.println("Custom claims after update: " + user.getCustomClaims());
+                logger.info("Custom claims after update: {}", user.getCustomClaims());
             } catch (FirebaseAuthException fae) {
             logger.error("Firebase Auth Exception: {}", fae.getMessage());
         }
@@ -101,7 +96,7 @@ public class FirebaseInit {
             FirebaseAuth auth = FirebaseAuth.getInstance();
             UserRecord userRecord = auth.getUser(userId);
             Map<String, Object> claims = new HashMap<>();
-            claims.put("name", name);
+            claims.put("displayName", name);
             auth.setCustomUserClaims(userRecord.getUid(), claims);
             logger.info("Successfully set custom claims for: {}", userRecord.getEmail());
         } catch (FirebaseAuthException fae) {

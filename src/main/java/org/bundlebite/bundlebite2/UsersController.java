@@ -28,7 +28,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.bundlebite.bundlebite2.FirebaseInit;
 import org.bundlebite.bundlebite2.User;
-// import org.bundlebite.bundlebite2.FirebaseInit;
 
 @RestController
 public class UsersController{
@@ -89,18 +88,21 @@ public class UsersController{
 
     @PostMapping("/users/setClaims/")
     @PreAuthorize("isAuthenticated()")
-    public String updateUser(@RequestBody Object user) {
-        try{
+    public String updateUser(@RequestBody User user) {
+        try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String userId = (String) authentication.getDetails();
+            String userId = authentication.getName();  // Assuming userId is stored as the principal's name
             logger.info("Authenticated user: {}", userId);
+            logger.info("User: {}", user.getName());  // Now using getName() method
 
-            // set custom claims for the authenticated user
-            FirebaseInit.setUserName(userId, user.name);
-            FirebaseInit.setCustomerRole(userId);
-        }
-        catch(Exception e){
-            logger.error(e.getMessage());
+            // Assume FirebaseInit.setUserName and FirebaseInit.setCustomerRole methods exist
+            FirebaseInit.setUserName(userId, user.getName());
+            if (user.getRole() != null) {
+                FirebaseInit.setCustomerRole(userId);
+            }
+        } catch(Exception e) {
+            logger.error("Failed to set user claims: " + e.getMessage());
+            return "Failed to update user!";
         }
 
         return "User updated successfully!";
