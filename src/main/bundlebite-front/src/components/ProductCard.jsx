@@ -15,7 +15,7 @@ const ProductCard = (props) => {
     }
 
     return (
-        <div className="product">
+        <div className={props.availability ? "product" : "product-not-available"}>
             <img className="product-img" src={process.env.PUBLIC_URL + props.img} alt={props.name} />
             <span className="product-name">{props.name}</span>
             <span className="product-price">€{props.price}</span>

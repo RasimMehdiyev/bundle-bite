@@ -82,6 +82,22 @@
     align-items: center;
     padding-bottom: 21px;
   }
+
+  .product-not-available {
+    width: 247px;
+    height: 342px;
+    border-radius: 20px;
+    background: #E0E0E0; /* Gray background */
+    box-shadow: none; /* No box-shadow */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 21px;
+    color: #A0A0A0; /* Optional: Gray text */
+  }
+  
+  
   
   .product-img{
     margin-top: 21px;
