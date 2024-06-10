@@ -69,16 +69,65 @@ public class UsersController{
         }
         return users;
     }
-    public User getUserById(String id) {
+
+    @GetMapping("/api/customers")
+    public List<User> getAllCustomers() {
+        List<User> users = new ArrayList<>();
+        List<User> undefinedRoleUsers = new ArrayList<>();
+        try {
+            Firestore firestore = FirestoreClient.getFirestore();
+            ApiFuture<QuerySnapshot> future = firestore.collection("users").get();
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments(); // Correct type here
+
+            for (QueryDocumentSnapshot document : documents) {
+                try {
+                    User user = new User();
+                    user.setEmail(document.getString("email"));
+                    logger.info("Email: {}", document.getString("email"));
+                    user.setRole(document.getString("role"));
+                    logger.info("Role: {}", document.getString("role"));
+                    user.setUid(document.getId());
+                    logger.info("User ID: {}", document.getId());
+                    user.setName(document.getString("name"));
+                    logger.info("Name: {}", document.getString("name"));
+
+                    if (user.getRole()!="manager") {
+                        users.add(user);
+                    }
+
+
+                    if (user.getRole() == null) {
+                        undefinedRoleUsers.add(user);
+                    }
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                }
+            }
+            // if (undefinedRoleUsers.size() > 0)
+            //     FirebaseInit.setCustomerClaimsToUndefined(undefinedRoleUsers);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return users;
+    }
+
+    @GetMapping("/api/customers/{id}")
+    public User getUserById(@PathVariable  String id) {
         User user = new User();
         try {
             Firestore firestore = FirestoreClient.getFirestore();
             DocumentReference docRef = firestore.collection("users").document(id);
+            logger.info("User ID: {}", id);
             ApiFuture<DocumentSnapshot> future = docRef.get();
             DocumentSnapshot document = future.get();
+            logger.info("Document: {}", document);
             if (document.exists()) {
+
                 user.setEmail(document.getString("email"));
                 user.setRole(document.getString("role"));
+                user.setUid(id);
+                user.setName(document.getString("name"));
+
             }
         } catch (Exception e) {
             logger.error(e.getMessage());

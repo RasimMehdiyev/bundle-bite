@@ -73,6 +73,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         return !path.startsWith("/api") && !path.startsWith("/users");
     }
 
+
     private static class FirebaseAuthentication implements Authentication {
         private final User user;
 

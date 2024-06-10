@@ -85,7 +85,7 @@ const YourOrdersPage = () => {
                                             <UserOrderCardComponent
                                             orderId={order.uid}
                                             userId={order.user}
-                                            date={order.orderDate}
+                                            date={order.orderDate.slice(0,10)}
                                             status={order.status}
                                             items={order.items}
                                             total={order.totalPrice}

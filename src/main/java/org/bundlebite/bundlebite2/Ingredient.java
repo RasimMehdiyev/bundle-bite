@@ -9,7 +9,11 @@ public class Ingredient {
     private double price;
     private int quantity;
 
-      
+
+    public Ingredient()
+    {
+
+    }
     public Ingredient(String idLink, String name, int quantity){
         this.idLink = idLink;
         this.name = name;
