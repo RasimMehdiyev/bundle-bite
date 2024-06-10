@@ -119,6 +119,7 @@ public class OrdersController {
                     order.setOrderDate(document.getDate("orderDate"));
                     order.setItems(items);
                     orders.add(order);
+
                 } catch (Exception e) {
                     logger.error("Error mapping document to Order: Document ID = {}", document.getId(), e);
                 }

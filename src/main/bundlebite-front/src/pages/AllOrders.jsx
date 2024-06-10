@@ -12,6 +12,8 @@ import UserOrderCardComponent from "../components/UserOrderCardComponent.jsx";
 const AllOrders = () => {
 
     const  [orders, setOrders] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isOrder, setIsOrder] = useState("");
 
     const fetchOrders = async () => {
         try {
@@ -77,24 +79,43 @@ const AllOrders = () => {
                 .then(response => {
                     console.log(response.data);
                     // it returns object not array
+                    if(Object.keys(response.data).length === 0)
+                    {
+                        setIsOrder(false);
+                    }
+
                     var newOrder = response.data;
                     var newOrders = [];
                     newOrders.push(newOrder);
                     setOrders(newOrders);
                 });
             }
-    
+
         } catch (error) {
             console.error("Error fetching orders:", error.message);
         }
-        
+
     }
+
+    const handleSearchChange = (event) => {
+            const value = event.target.value;
+            setSearchTerm(value);
+            if (value) {
+                fetchByOrder(value);
+                if (isOrder==false)
+                {
+                    fetchByUser(value);
+                }
+            } else {
+                fetchOrders();  // Display all orders if search bar is empty
+            }
+        };
 
 
     useEffect(() => {
         fetchOrders();
     }   , []);
-    
+
 
     return(
         <div className="all" >
@@ -104,7 +125,13 @@ const AllOrders = () => {
                       <h1 className="header">ORDERS</h1>
                       <div className="search-container">
                           <FontAwesomeIcon icon={faSearch} className="search-icon" />
-                          <input className="search-bar" type="text" placeholder="#ORDER/USER"/>
+                          <input
+                              className="search-bar"
+                              type="text"
+                              placeholder="#ORDER/USER"
+                              value={searchTerm}
+                              onChange={handleSearchChange}
+                          />
                       </div>
                 </div>
                 <div className="order-grid">
