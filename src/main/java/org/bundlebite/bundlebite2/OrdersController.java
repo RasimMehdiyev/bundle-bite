@@ -177,7 +177,8 @@ public class OrdersController {
             Firestore firestore = FirestoreClient.getFirestore();
             DocumentReference userRef = firestore.collection("users").document(userId);
             CollectionReference ordersRef = firestore.collection("orders");
-            Query query = ordersRef.whereEqualTo("user", userRef);
+            Query query = ordersRef.whereEqualTo("user", userRef)
+            .orderBy("orderDate", Query.Direction.DESCENDING);
             ApiFuture<QuerySnapshot> future = query.get();
             List<QueryDocumentSnapshot> documents = future.get().getDocuments();
             logger.info("Successfully fetched orders for user {}.", userRef.getId());
@@ -211,6 +212,4 @@ public class OrdersController {
         }
         return orders;
     }
-
-
 }

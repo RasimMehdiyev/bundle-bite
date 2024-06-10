@@ -9,11 +9,12 @@ import axios from "axios";
 const YourOrdersPage = () => {
 
 
-      const [selectedCheckbox, setSelectedCheckbox] = useState('');
+      const [selectedCheckbox, setSelectedCheckbox] = useState('newest');
       const [orders, setOrders] = useState([]);
 
       const handleCheckboxChange = (event) => {
         setSelectedCheckbox(event.target.name);
+        setOrders((currentOrders) => [...currentOrders].reverse());
       };
 
       const isCheckboxChecked = (name) => {

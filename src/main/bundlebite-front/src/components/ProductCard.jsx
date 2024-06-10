@@ -3,15 +3,15 @@ import {useAuth} from "../auth.js";
 import { useNavigate } from "react-router-dom";
 
 const ProductCard = (props) => {
-    const {user,loading} = useAuth();
+    const {user,loading,role} = useAuth();
     const navigate = useNavigate();
 
     const addToCart = () => {
         console.log("Add to cart");
     }
 
-    const redirectToHome = () => {
-        navigate("/");
+    const redirectToLogin = () => {
+        navigate("/login");
     }
 
     return (
@@ -20,13 +20,18 @@ const ProductCard = (props) => {
             <span className="product-name">{props.name}</span>
             <span className="product-price">€{props.price}</span>
             <span className="product-buttons">
-                {user ? (
+            {
+                user ? (
+                    role !== 'manager' ? (
                     <button className="button-text" onClick={addToCart}>ADD TO CART</button>
+                    ) : 
+                    null 
+                    
+                ) :                     
+                <button className="button-text" onClick={redirectToLogin}>ADD TO CART</button>
+                // This ensures nothing is rendered if there is no user
+            }
 
-
-                ):(
-                    <button className="button-text" onClick={redirectToHome}>ADD TO CART</button>
-             )}
             </span>
         </div>
     );
