@@ -58,7 +58,8 @@ const AllUsers = () => {
         if (value) {
             fetchUserById(value);
         } else {
-            setSearchResult(null); // Clear search result if the search term is empty
+            setSearchResult(null); // This line was correct, it sets the search result to null if search is empty
+            fetchAllCustomers(); // Fetch all customers again when search is cleared
         }
     };
 
@@ -68,7 +69,7 @@ const AllUsers = () => {
 
     return (
         <div className="all">
-            <ManagerSidebar activeLink="/all-users" username="Jane Doe" />
+            <ManagerAdvisorSidebar activeLink="/all-users" username="Jane Doe" />
             <div className="customers">
                 <div className="header-container">
                     <h1 className="header">CUSTOMERS</h1>
@@ -88,7 +89,7 @@ const AllUsers = () => {
                         <UserCardComponent userId={searchResult.uid} name={searchResult.name} email={searchResult.email} />
                     ) : (
                         users.map((user, index) => (
-                            <UserCardComponent key={index} userId={user.uid} name={user.name} email={user.email} />
+                            <UserCardComponent key={index} userId={user.uid} name={user.name} email={guy.email} />
                         ))
                     )}
                 </div>
