@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ManagerSidebar from "../components/ManagerSidebar.jsx";
+import SidebarComponent from "../components/SidebarComponent.jsx"
 import UserCardComponent from "../components/UserCardComponent.jsx";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -69,7 +69,7 @@ const AllUsers = () => {
 
     return (
         <div className="all">
-            <ManagerAdvisorSidebar activeLink="/all-users" username="Jane Doe" />
+            <SidebarComponent activeLink="/your-orders" username="John Doe"/>
             <div className="customers">
                 <div className="header-container">
                     <h1 className="header">CUSTOMERS</h1>
@@ -89,7 +89,7 @@ const AllUsers = () => {
                         <UserCardComponent userId={searchResult.uid} name={searchResult.name} email={searchResult.email} />
                     ) : (
                         users.map((user, index) => (
-                            <UserCardComponent key={index} userId={user.uid} name={user.name} email={guy.email} />
+                            <UserCardComponent key={index} userId={user.uid} name={user.name} email={user.email} />
                         ))
                     )}
                 </div>

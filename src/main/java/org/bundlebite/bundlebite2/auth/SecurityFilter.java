@@ -70,11 +70,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI().substring(request.getContextPath().length());
-<<<<<<< HEAD
         return !path.startsWith("/api") && !path.startsWith("/users");
-=======
-        return !path.startsWith("/api") && !path.startsWith("/user");
->>>>>>> 8-make-allusers-page-dynamic
     }
 
 

@@ -59,7 +59,7 @@ const SidebarComponent = ({ activeLink, username }) => {
                <p style={{fontFamily: 'Inter', color: 'white', fontSize: '22px', marginBottom:'0px'}}>Your are logged in as </p>
                <div style={{display: 'flex', alignItems:'center'}}>
                    <FontAwesomeIcon icon={faUser} style={{ color: 'white', marginRight: '8px', fontSize: '26px' }} />
-                   <p style={{fontFamily: 'Inter', color: 'white', fontSize: '28px', marginTop:'0px', marginBottom:'0px', fontWeight: 'bold'}}>{username}</p>
+                   <p style={{fontFamily: 'Inter', color: 'white', fontSize: '28px', marginTop:'0px', marginBottom:'0px', fontWeight: 'bold'}}>{name}</p>
                </div>
                <p style={{fontFamily: 'Inter', color: 'white', fontSize: '17px', marginTop:'0px', marginBottom:'50px', marginLeft:'30px',fontStyle: 'italic'}}>(manager)</p>
            </div>

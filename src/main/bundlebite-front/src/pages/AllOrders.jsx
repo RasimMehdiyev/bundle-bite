@@ -4,8 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { getCurrentUser } from "../auth.js";
 
-
-import ManagerSidebar from "../components/ManagerSidebar.jsx";
+import SidebarComponent from "../components/SidebarComponent.jsx"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import UserOrderCardComponent from "../components/UserOrderCardComponent.jsx";
@@ -99,7 +98,7 @@ const AllOrders = () => {
 
     return(
         <div className="all" >
-            <ManagerSidebar activeLink="/all-orders" username="Jane Doe"/>
+            <SidebarComponent activeLink="/your-orders" username="John Doe"/>
             <div className="right-section">
                 <div className="header-container">
                       <h1 className="header">ORDERS</h1>
