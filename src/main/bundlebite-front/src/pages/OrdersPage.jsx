@@ -4,10 +4,14 @@ import SidebarComponent from "../components/SidebarComponent.jsx";
 import OrderCardComponent from "../components/OrderCardComponent.jsx";
 import OrderModalComponent from "../components/OrderModalComponent.jsx";
 import { useState } from "react";
+import axios from "axios";
+import { getCurrentUser } from "../auth.js";
+import {addDoc, getDocs, setDoc, doc} from "firebase/firestore"
+import { auth, db, collection} from "../firebase-config";
+
 // import { addOrder } from "../auth.js";
 
 const OrdersPage = () => {
-
     const [showModal, setShowModal] = useState("none");
     // Define state for cards array
     var [cards, setCards] = useState([
@@ -23,6 +27,89 @@ const OrdersPage = () => {
         { id: 9, quantity: 1, name: "SPANAKOPITA", img:process.env.PUBLIC_URL + "/images/design/spanakopita.png", price:15}
     ]);
 
+    const addToCart = async() => {
+        const user = getCurrentUser();
+        try {
+          // Add a new document with a generated ID to the "Cart" collection
+          const ProductList = {
+            CartStatus: false,
+            Date: Date.toString(),
+            ProductL: {
+                test: {
+                Id: 0,
+                quantity: 0,
+                name: "A",
+                img: "B",
+                price: "C",
+                }
+            },
+            UserName: "Boo"
+          };
+
+          cards.forEach(card => {
+            const Product = {
+                Id: card.id,
+                quantity: card.quantity + 1,
+                name: card.name,
+                img: card.img,
+                price: card.price
+            }
+            ProductList.ProductL[card.id] = Product;
+          });
+          const cartSnapshot = (await getDocs(collection(db, 'Cart'))).docs[0];
+          const firstItemRef = doc(db, 'Cart', cartSnapshot.id);
+            await setDoc(firstItemRef, ProductList);
+          console.log("Item added to cart successfully");
+        } catch (error) {
+          console.error("Error adding item to cart: ", error);
+        }
+      }
+
+
+
+    const getfromCart = async() => {
+        try {
+          const user = getCurrentUser();
+          console.log('Getting the user...')
+          if (user){
+            const cartCollection = collection(db, 'Cart');
+            try {
+              // Fetch all documents in the "Cart" collection
+              const cartSnapshot = await getDocs(cartCollection);
+              
+              // Loop through the documents and log the data
+              cartSnapshot.forEach(doc => {
+                const data = doc.data().ProductArray;
+                for(let i = 0; i < data.length; i++){
+                    const info = data[i];
+                    setCards(
+                        cards.map(card => {
+                            if (card.id === info.id) {
+                                return {
+                                    ...card,
+                                    quantity: info.quantity,
+                                    name: info.name,
+                                    img: info.url,
+                                    price: info.price
+                                };
+                            }
+                            return card;
+                        })
+                    );
+                    console.log(data[i]);
+                }
+                console.log(doc.id, '=>', doc.data().ProductArray);
+              });
+            } catch (error) {
+              console.error("Error fetching cart data: ", error);
+            }
+          }
+      }
+      catch (error) {
+        console.error("Error fetching orders:", error.message);
+      }
+    }
+
     const openModal = () => {
         setShowModal("block"); // Show the modal
     }
@@ -35,11 +122,13 @@ const OrdersPage = () => {
       const handleConfirm = () => {
         console.log("Order Confirmed");
         setShowModal("none"); // Hide the modal
-        // addOrder(cards);
+        //addOrder(cards);
       };
 
     // Function to update quantity for a card by ID
     const updateQuantity = (id, newQuantity) => {
+        getfromCart();
+        addToCart();
             setCards(
                 cards.map(card => {
                     if (card.id === id) {
