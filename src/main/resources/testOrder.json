@@ -1,0 +1,18 @@
+{
+    "items": [{
+        "id": "1",
+        "name": "Shah Pilaf",
+        "price": 15,
+        "quantity": 2
+    }, {
+        "id": "2",
+        "name": "Vodka Pasta",
+        "price": 12,
+        "quantity": 2
+    }],
+    "orderDate": "2024-07-14T12:12:12",
+    "status": "Pending",
+    "totalPrice": 27,
+    "uid": "025781975",
+    "user": "/users/kwmRODFiEBh68HT7Lki2wOLHVWN2"
+}

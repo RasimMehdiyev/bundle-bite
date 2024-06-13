@@ -11,16 +11,27 @@ public class Meal{
     private List<Ingredient> ingredients;
     private boolean availability;
     private String imagePath;
+    private String ref;
+
 
     public Meal() {
     }
 
-    public Meal(String name, String id, double price, int quantity, String imagePath) {
+    public Meal(String name, String id, double price, int quantity, String imagePath, String ref) {
         this.name = name;
         this.id = id;
         this.price = price;
         this.quantity = quantity;
         this.imagePath = imagePath;
+        this.ref = ref;
+    }
+
+    public String getRef(){
+        return ref;
+    }
+
+    public void setRef(String ref){
+        this.ref = ref;
     }
 
     public void setImagePath(String imagePath) {
