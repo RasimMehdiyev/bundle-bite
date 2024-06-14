@@ -22,10 +22,19 @@ public class FirebaseInit {
     private static final Logger logger = LoggerFactory.getLogger(FirebaseInit.class);
     @PostConstruct
     public void initialize() {
-        Dotenv dotenv = Dotenv.load();
-        String json = dotenv.get("FIREBASE_CREDENTIALS_BASE64");
+
+        String json;
+        String databaseURL;
+        if (System.getenv("FIREBASE_CREDENTIALS_BASE64") != null) {
+            json = System.getenv("FIREBASE_CREDENTIALS_BASE64");
+            databaseURL = System.getenv("DATABASE_URL");
+        } else {
+            Dotenv dotenv = Dotenv.load();
+            json = dotenv.get("FIREBASE_CREDENTIALS_BASE64");
+            databaseURL = dotenv.get("DATABASE_URL");
+        }
+
         byte[] decodedJson = java.util.Base64.getDecoder().decode(json);
-        String databaseURL = dotenv.get("DATABASE_URL");
         ByteArrayInputStream serviceAccountStream = new ByteArrayInputStream(decodedJson);
 
 
