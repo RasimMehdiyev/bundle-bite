@@ -2,20 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 //LINK APPROPRIATE PAGES
 import ProductPage from './components/ProductPage';
-import CartPage from './components/CartPage';
 import OrdersPage from './components/OrdersPage';
 import { v4 as uuidv4 } from 'uuid';
 
 const App = () => {
-  const uid = 'user123'; // GET USER ID TO USE LATER
-  const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')) || {});
-
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart]);
-
   //CART PAGE
-  const addToCart = (id, name, image, url, price) => {
+  const getfromCart = async() => {
+    try {
+      const user = getCurrentUser();
+      console.log('Getting the user...')
+      if (user){
+          const token = await user.getIdToken();
+          console.log("Getting from Cart...");
+          await axios.get("/api/Cart",{
+              headers: {
+                  "Authorization": `Bearer ${token}`,
+                  "Content-Type": "application/json"
+              }
+          })
+          .then(response => {
+              console.log(response.data);
+              setOrders(response.data);
+          });
+      }
+  }
+  catch (error) {
+    console.error("Error fetching orders:", error.message);
+  }
+}
+
+  function addToCart() {
+
     const newCart = { ...cart };
     if (newCart[id]) {
       newCart[id].quantity += 1;
@@ -25,7 +42,7 @@ const App = () => {
     }
     setCart(newCart);
     alert(`${name} added to cart!`);
-  };
+  }
 
   const handleCheckout = async () => {
     const date = new Date();
