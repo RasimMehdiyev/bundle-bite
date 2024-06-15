@@ -75,7 +75,12 @@ const ProductCard = (props) => {
             {
                 user ? (
                     role !== 'manager' ? (
-                    <button className="button-text" onClick={addToCart}>ADD TO CART</button>
+                        props.availability ? 
+                    (
+                        <button className="button-text" onClick={addToCart}>ADD TO CART</button>
+                    ) :
+                    <button className="button-text-disabled">ADD TO CART</button>
+
                     ) : 
                     null 
                     

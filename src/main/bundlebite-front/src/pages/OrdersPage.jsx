@@ -173,17 +173,17 @@ const OrdersPage = () => {
             navigate("/");
         }
     
-    const removeItemByRefLocal = (ref) => {
-        // remove all items with the given ref
-        for (let i = 0; i < cards.length; i++) {
-            if (cards[i].ref === ref) {
-                cards.splice(i, 1);
-                i--;
-            }
+        const removeItemByRefLocal = (ref) => {
+            let testCart;
+        
+            testCart = cards.filter(card => card.ref !== ref)
+            setCards(testCart);
+            
+            console.log("Removed item with ref: " + ref);
+            console.log(testCart);
         }
-        // setCards(cards.filter(card => card.ref !== ref));
-        console.log("New cards: ", cards)
-    }
+        
+        
 
     return(
         <div>

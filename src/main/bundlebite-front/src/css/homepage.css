@@ -25,6 +25,22 @@
     border: none;
 }
 
+.button-text-disabled {
+    border-radius: 10px;
+    background: #FFAC4B;
+    color: #FFF;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    width: 195px;
+    height: 46px;
+    flex-shrink: 0;
+    cursor: not-allowed;
+    border: none;
+    opacity: 0.5;
+}
+
 .button-text-inverse {
     border-radius: 10px;
     background: #FFF;

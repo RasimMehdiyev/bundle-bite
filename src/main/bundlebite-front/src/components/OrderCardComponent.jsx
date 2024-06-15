@@ -31,7 +31,7 @@ const OrderCardComponent = ({card, updateQuantity, remove}) => {
     return(
     <div className="order-card">
         <div className="order-card-left">
-        <div onClick={handleCancel} style={{ cursor: 'pointer' }}>
+        <div style={{ cursor: 'pointer' }}>
             <img onClick={handleRemove} className="trash-svg" src={process.env.PUBLIC_URL + "/images/trash-2.svg"} alt="Trash Icon" />
         </div>
             <img src={process.env.PUBLIC_URL + "/images/design/" + card.img} alt="" />

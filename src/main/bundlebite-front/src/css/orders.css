@@ -139,6 +139,7 @@ input {
     background-color: #65C9DF;
     color: white;
     border: none;
+    /* z-index: 6; */
     border-radius: 10px;
     width: 250px;
     height: 60px;
