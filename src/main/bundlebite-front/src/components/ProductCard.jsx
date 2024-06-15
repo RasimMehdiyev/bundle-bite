@@ -1,13 +1,14 @@
 import React from "react";
 import {useAuth} from "../auth.js";
 import { useNavigate } from "react-router-dom";
+import {addtoCart} from "../pages/OrdersPage.jsx"
 
 const ProductCard = (props) => {
     const {user,loading,role} = useAuth();
     const navigate = useNavigate();
 
     const addToCart = () => {
-        console.log("Add to cart");
+        addToCart(props.id,1);
     }
 
     const redirectToLogin = () => {
