@@ -10,6 +10,7 @@ const ProductCard = (props) => {
     const addToCart = () => {
         console.log("Add to cart");
         addToCartButton(props.id);
+        navigate("/orders");
     }
 
     const redirectToLogin = () => {
