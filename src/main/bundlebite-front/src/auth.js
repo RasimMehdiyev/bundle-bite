@@ -65,6 +65,7 @@ export const useAuth = () => {
     const [loading, setLoading] = useState(true);
     const [role, setRole] = useState("");
 
+
     useEffect(() => {
         // This function sets up the listener and returns the unsubscribe function directly
         const unsubscribe = onAuthStateChanged(auth, async(currentUser) => {
@@ -114,3 +115,12 @@ onAuthStateChanged(auth, (user) => {
             })
     }
 });
+
+
+export const submitCart = (order) => {
+    const user = getCurrentUser();
+    if (user) {
+        const ordersRef = doc(db, "orders", order.uid);
+        setDoc(ordersRef, order);
+    }
+}

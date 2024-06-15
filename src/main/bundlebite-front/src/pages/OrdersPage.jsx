@@ -4,24 +4,46 @@ import SidebarComponent from "../components/SidebarComponent.jsx";
 import OrderCardComponent from "../components/OrderCardComponent.jsx";
 import OrderModalComponent from "../components/OrderModalComponent.jsx";
 import { useState } from "react";
-// import { addOrder } from "../auth.js";
+import axios from "axios";
+import {getCurrentUser, submitCart} from "../auth.js"
 
 const OrdersPage = () => {
 
     const [showModal, setShowModal] = useState("none");
+    
+
     // Define state for cards array
-    var [cards, setCards] = useState([
-        { id: 0, quantity: 1 , name:"SOUVLAKI", img:process.env.PUBLIC_URL + "/images/design/souvlaki.png", price:6}, // Initial state for card 1
-        { id: 1, quantity: 2, name:"VODKA PASTA", img:process.env.PUBLIC_URL + "/images/design/pasta.png", price:8}, // Initial state for card 2
-        { id: 2, quantity: 2, name: "PIZZA MARGHERITA", img:process.env.PUBLIC_URL + "/images/design/pizza.png", price:7}    ,
-        { id: 3, quantity: 1, name: "BURRITO", img:process.env.PUBLIC_URL + "/images/design/burrito.png", price:10},
-        { id: 4, quantity: 1, name: "POKE BOWL", img:process.env.PUBLIC_URL + "/images/design/poke.png", price:12},
-        { id: 5, quantity: 1, name: "TACO", img:process.env.PUBLIC_URL + "/images/design/taco.png", price:9},
-        { id: 6, quantity: 1, name: "VOL-AU-VENT", img:process.env.PUBLIC_URL + "/images/design/volauvent.png", price:11},
-        { id: 7, quantity: 1, name: "CHILI CON CARNE", img:process.env.PUBLIC_URL + "/images/design/chili.png", price:13},
-        { id: 8, quantity: 1, name: "SHAH PILAF", img:process.env.PUBLIC_URL + "/images/design/shah.png", price:14},
-        { id: 9, quantity: 1, name: "SPANAKOPITA", img:process.env.PUBLIC_URL + "/images/design/spanakopita.png", price:15}
+    const [cards, setCards] = useState([
+        { ref: "QmKJGOjroos8Sa45tpyt", quantity: 1 , name:"SHAH PILAF", img:process.env.PUBLIC_URL + "/images/design/souvlaki.png", price:6}, // Initial state for card 1
+        { ref: "kw35uS6JfAqZOeHZyO2C", quantity: 2, name:"VODKA PASTA", img:process.env.PUBLIC_URL + "/images/design/pasta.png", price:8}, // Initial state for card 2
     ]);
+
+    const submitCartLocal = () =>{
+        console.log("Cart submitted");
+        // put cards in "items":[] using ref to cards
+        // ref example: "/BundleBite/card.ref"
+        let items = [];
+        // based on updated quantity
+        cards.forEach(card => {
+            for (let i = 0; i < card.quantity; i++) {
+                items.push("/BundleBite/" + card.ref);
+            }
+        });
+        
+        let orderDate = new Date();
+        let uid = "O" + Math.random().toString(36).substr(2, 9).toUpperCase();
+        let order = {
+            "items": items,
+            "orderDate": orderDate,
+            "status": "pending",
+            "totalPrice": cards.reduce((acc, card) => acc + card.price * card.quantity, 0),
+            "uid": uid,
+            "user":"/users/" + getCurrentUser().uid
+        }
+        console.log(order);
+        submitCart(order);
+    }
+
 
     const openModal = () => {
         setShowModal("block"); // Show the modal
@@ -35,15 +57,17 @@ const OrdersPage = () => {
       const handleConfirm = () => {
         console.log("Order Confirmed");
         setShowModal("none"); // Hide the modal
-        // addOrder(cards);
+        submitCartLocal();
       };
 
     // Function to update quantity for a card by ID
-    const updateQuantity = (id, newQuantity) => {
+    const updateQuantity = (ref, newQuantity) => {
             setCards(
                 cards.map(card => {
-                    if (card.id === id) {
-                        console.log("card id: " + card.id + " new quantity: " + newQuantity)
+                    if (card.ref === ref) {
+                        console.log("card id: " + card.ref + " new quantity: " + newQuantity)
+                        // add the the card to the cart with the new quantity
+                        console.log(cards);
                         return {
                             ...card,
                             quantity: newQuantity
@@ -62,7 +86,7 @@ const OrdersPage = () => {
                 <div className="orders">
                     <p className="cart-title">YOUR CART</p>
                 {cards.map(card => (
-                    <OrderCardComponent key={card.id} card={card} updateQuantity={updateQuantity}/>           
+                    <OrderCardComponent key={card.ref} card={card} updateQuantity={updateQuantity}/>           
                 ))}                
                 </div>
                 <div className="checkout">

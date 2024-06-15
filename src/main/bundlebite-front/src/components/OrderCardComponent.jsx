@@ -6,13 +6,13 @@ const OrderCardComponent = ({card, updateQuantity}) => {
     const handleIncrease = () => {
         console.log(card.quantity+1);
         var newQuantity = card.quantity + 1;
-        updateQuantity(card.id, newQuantity);
+        updateQuantity(card.ref, newQuantity);
     };
 
     const handleDecrease = () => {
         if (card.quantity > 1) {
             console.log(card.quantity-1);
-            updateQuantity(card.id, card.quantity - 1);
+            updateQuantity(card.ref, card.quantity - 1);
         }
     };
 
@@ -22,7 +22,7 @@ const OrderCardComponent = ({card, updateQuantity}) => {
             <img className="trash-svg" src={process.env.PUBLIC_URL + "/images/trash-2.svg"} alt="" />
             <img src={process.env.PUBLIC_URL + card.img} alt="" />
             <span className="order-details">
-                <p className="order-name">{card.name}</p>
+                <p className="order-name">{card.name.toUpperCase()}</p>
                 <span className="details">
                     <button onClick={handleDecrease}>-</button>
                     <input className="button-inverse" value={card.quantity}/>
