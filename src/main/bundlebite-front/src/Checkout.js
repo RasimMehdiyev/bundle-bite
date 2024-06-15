@@ -1,109 +1,141 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-//LINK APPROPRIATE PAGES
-import ProductPage from './components/ProductPage';
-import OrdersPage from './components/OrdersPage';
-import { v4 as uuidv4 } from 'uuid';
+import { addDoc, getDocs, getDoc, setDoc, doc, collection } from "firebase/firestore";
+import { db } from "./firebase-config";
+import { getCurrentUser } from "./auth.js";
 
-const App = () => {
-  //CART PAGE
-  const getfromCart = async() => {
-    try {
-      const user = getCurrentUser();
-      console.log('Getting the user...')
-      if (user){
-          const token = await user.getIdToken();
-          console.log("Getting from Cart...");
-          await axios.get("/api/Cart",{
-              headers: {
-                  "Authorization": `Bearer ${token}`,
-                  "Content-Type": "application/json"
-              }
-          })
-          .then(response => {
-              console.log(response.data);
-              setOrders(response.data);
-          });
+export const addToCartButton = async (id, cards) => {
+  const user = getCurrentUser();
+  const date = new Date();
+  try {
+    let ProductList = {
+      CartStatus: false,
+      Date: date,
+      ProductL: {},
+      UserName: user.uid
+    };
+
+    const Prod = {
+      Id: id,
+      quantity: 1
+    };
+
+    ProductList.ProductL[0] = Prod;
+
+    let i = 1;
+    cards.forEach(card => {
+      const Product = {
+        Id: card.id,
+        quantity: card.quantity
+      };
+      ProductList.ProductL[i] = Product;
+      i++;
+    });
+
+    const cartSnapshot = await getDocs(collection(db, 'Cart'));
+    let foundUser = false;
+    let PastCart;
+
+    cartSnapshot.forEach(doc => {
+      if (doc.data().UserName === user.uid) {
+        PastCart = doc;
+        foundUser = true;
       }
-  }
-  catch (error) {
-    console.error("Error fetching orders:", error.message);
-  }
-}
+    });
 
-  function addToCart() {
-
-    const newCart = { ...cart };
-    if (newCart[id]) {
-      newCart[id].quantity += 1;
-      newCart[id].totalprice += price;
+    if (foundUser) {
+      const firstItemRef = doc(db, 'Cart', PastCart.id);
+      await setDoc(firstItemRef, ProductList);
     } else {
-      newCart[id] = { name, image, url, quantity: 1, totalprice: price };
+      await addDoc(collection(db, 'Cart'), ProductList);
     }
-    setCart(newCart);
-    alert(`${name} added to cart!`);
+  } catch (error) {
+    console.error("Error adding item to cart: ", error);
   }
-
-  const handleCheckout = async () => {
-    const date = new Date();
-    const formattedCart = Object.keys(cart).map(id => ({
-      orderId: uuidv4(),
-      userId: uid,
-      name: cart[id].name,
-      date: date.toJSON(),
-      url: cart[id].url,
-      status: "Submitted",
-      items: cart[id],
-      total: cart[id].totalprice,
-    }));
-
-    try {
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formattedCart),
-      });
-
-      if (response.ok) {
-        alert('Checkout successful!');
-        setCart({});
-      } else {
-        alert('Checkout failed!');
-      }
-    } catch (error) {
-      console.error('Error during checkout:', error);
-      alert('Checkout failed!');
-    }
-  };
-
-  return (
-    <Router>
-      <Switch>
-        <Route path="/product/1">
-          <ProductPage id="1" name="Product 1" imageUrl="/path/to/product1.jpg" addToCart={addToCart} price={100} />
-        </Route>
-        <Route path="/product/2">
-          <ProductPage id="2" name="Product 2" imageUrl="/path/to/product2.jpg" addToCart={addToCart} price={200} />
-        </Route>
-        <Route path="/cart">
-          <CartPage cart={cart} updateCart={setCart} handleCheckout={handleCheckout} />
-        </Route>
-        <Route path="/orders">
-          <OrdersPage />
-        </Route>
-        <Route path="/">
-          <h1>Welcome to the Shopping Cart</h1>
-          <p>Select a product:</p>
-          <ul>
-            <li><a href="/product/1">Product 1</a></li>
-            <li><a href="/product/2">Product 2</a></li>
-          </ul>
-        </Route>
-      </Switch>
-    </Router>
-  );
 };
 
-export default App;
+export const addToCart = async (id, newQuantity, cards) => {
+  const user = getCurrentUser();
+  const date = new Date();
+  try {
+    let ProductList = {
+      CartStatus: false,
+      Date: date,
+      ProductL: {},
+      UserName: user.uid
+    };
+
+    let i = 0;
+    cards.forEach(card => {
+      const Product = {
+        Id: card.id,
+        quantity: card.id === id ? newQuantity : card.quantity
+      };
+      ProductList.ProductL[i] = Product;
+      i++;
+    });
+
+    const cartSnapshot = await getDocs(collection(db, 'Cart'));
+    let foundUser = false;
+    let PastCart;
+    
+    cartSnapshot.forEach(doc => {
+      if (doc.data().UserName === user.uid) {
+        PastCart = doc;
+        foundUser = true;
+      }
+    });
+
+    if (foundUser) {
+      const firstItemRef = doc(db, 'Cart', PastCart.id);
+      await setDoc(firstItemRef, ProductList);
+    } else {
+      await addDoc(collection(db, 'Cart'), ProductList);
+    }
+  } catch (error) {
+    console.error("Error adding item to cart: ", error);
+  }
+};
+
+export const getfromCart = async (setCards) => {
+  const user = getCurrentUser();
+  if (user) {
+    const cartCollection = collection(db, 'Cart');
+    try {
+      const cartSnapshot = await getDocs(cartCollection);
+      cartSnapshot.forEach(doc => {
+        if (doc.data().UserName === user.uid) {
+          const data = doc.data().ProductL;
+          getUpdatedCards(data, setCards);
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching orders:", error.message);
+    }
+  }
+};
+
+const getUpdatedCards = async (data, setCards) => {
+  const UpdatedCardsmap = Object.values(data).map(async (card) => {
+    const moreInfo = await fetchAdditionalData(card.Id);
+    return {
+      id: card.Id,
+      quantity: card.quantity,
+      name: moreInfo.name,
+      img: '/images/design/' + moreInfo.img,
+      price: moreInfo.price
+    };
+  });
+
+  const updatedCards = await Promise.all(UpdatedCardsmap);
+  setCards(updatedCards);
+};
+
+const fetchAdditionalData = async (id) => {
+  const BundleBite = doc(db, id);
+  const docSnapshot = await getDoc(BundleBite);
+  const info = docSnapshot.data();
+  return {
+    name: info.name,
+    price: info.price,
+    img: info.imagePath
+  };
+};

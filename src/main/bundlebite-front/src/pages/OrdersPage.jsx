@@ -8,6 +8,7 @@ import axios from "axios";
 import { getCurrentUser } from "../auth.js";
 import {addDoc, getDocs, getDoc, setDoc, doc} from "firebase/firestore"
 import { auth, db, collection} from "../firebase-config";
+import { addToCart, addToCartButton, getfromCart } from "../Checkout.js";
 
 // import { addOrder } from "../auth.js";
 
@@ -28,12 +29,15 @@ const OrdersPage = () => {
         { id: 9, quantity: 0, name: "SPANAKOPITA", img:process.env.PUBLIC_URL + "/images/design/spanakopita.png", price:15}
     ]);
 
+
     
     useEffect(() => {
-        getfromCart();
+        getfromCart(setCards);
     },[]);
 
     //var[cards,setCards] = useState(getInitialCart);
+
+    /*
 
     const addToCartButton = async(id) => {
       getfromCart();
@@ -223,7 +227,7 @@ const OrdersPage = () => {
                 return newCard;
             }));
           }});
-          */
+          
                 //console.log(doc.id, '=>', doc.data().ProductArray);
               
       });
@@ -271,7 +275,7 @@ const OrdersPage = () => {
 
         return additionalData;
       }
-
+*/
     const openModal = () => {
         setShowModal("block"); // Show the modal
     }
@@ -290,7 +294,7 @@ const OrdersPage = () => {
     // Function to update quantity for a card by ID
     const updateQuantity = (id, newQuantity) => {
         //addToCartButton("BundleBite/SSsnKifmdWDhiqr7RH5p");
-        addToCart(id,newQuantity);
+        addToCart(id, newQuantity, cards, setCards);
         //getfromCart();
         setCards(
                 cards.map(card => {
