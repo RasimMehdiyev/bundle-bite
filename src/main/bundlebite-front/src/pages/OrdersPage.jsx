@@ -36,66 +36,57 @@ const OrdersPage = () => {
     //var[cards,setCards] = useState(getInitialCart);
 
     const addToCartButton = async(id) => {
+      getfromCart();
       const user = getCurrentUser();
-      const date = new Date();
-      const date2 = date.getDate();
       console.log(user.uid);
+      const date = new Date();
       try {
         // Add a new document with a generated ID to the "Cart" collection
         let ProductList = {
           CartStatus: false,
-          Date: date2,
+          Date: date,
           ProductL: {
+            Id: id,
+            quantity: 1
           },
           UserName: user.uid
         };
 
-
-
         cards.forEach(card => {
-          if(card.id === id) {
             const Product = {
+              0: {
               Id: card.id,
-              quantity: card.quantity + 1,
-              name: card.name,
-              img: card.img,
-              price: card.price
+              quantity: card.quantity
+            }
+              //name: card.name,
+              //img: card.img,
+              //price: card.price
           }
-          ProductList.ProductL[card.id] = Product;
-        }
-          else {
-            const Product = {
-              Id: card.id,
-              quantity: card.quantity,
-              name: card.name,
-              img: card.img,
-              price: card.price
-          }
-          ProductList.ProductL[card.id] = Product;
-          }
-        });
+          ProductList.ProductL[ProductList.length] = Product;
+          });
+
         const cartSnapshot = (await getDocs(collection(db, 'Cart')));
         let foundUser = false;
         let PastCart;
         cartSnapshot.forEach(doc =>{
-          console.log(doc.data().UserName);
+          //console.log(doc.data().UserName);
           if(doc.data().UserName == user.uid) {
             PastCart = doc;
             foundUser = true;
-            console.log(doc.data());
+            //console.log(doc.data());
           }
         }
         );
         if (foundUser === true) {
-          console.log("Found User Ref");
+          //console.log("Found User Ref");
           const firstItemRef = doc(db, 'Cart', PastCart.id);
           await setDoc(firstItemRef, ProductList);
         }
         else {
           await addDoc(collection(db, 'Cart'), ProductList);
         }
-
-        console.log("Item added to cart successfully");
+        
+        //console.log("Item added to cart successfully");
       } catch (error) {
         console.error("Error adding item to cart: ", error);
       }
@@ -126,7 +117,7 @@ const OrdersPage = () => {
                 //img: card.img,
                 //price: card.price
             }
-            ProductList.ProductL[0] = Product;
+            ProductList.ProductL[ProductList.length] = Product;
           }
             else {
               const Product = {
@@ -136,7 +127,7 @@ const OrdersPage = () => {
                 //img: card.img,
                 //price: card.price
             }
-            ProductList.ProductL[0] = Product;
+            ProductList.ProductL[ProductList.length] = Product;
             }
           });
           const cartSnapshot = (await getDocs(collection(db, 'Cart')));
@@ -286,7 +277,8 @@ const OrdersPage = () => {
 
     // Function to update quantity for a card by ID
     const updateQuantity = (id, newQuantity) => {
-        addToCart(id,newQuantity);
+        addToCartButton(id);
+        //addToCart(id,newQuantity);
         //getfromCart();
         setCards(
                 cards.map(card => {
