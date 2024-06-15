@@ -46,28 +46,33 @@ const OrdersPage = () => {
           CartStatus: false,
           Date: date,
           ProductL: {
-            Id: id,
-            quantity: 1
           },
           UserName: user.uid
         };
 
+        const Prod = {
+          Id : id,
+          quantity: 1
+        }
+
+        ProductList.ProductL[ProductList.length()] = Prod;
+
+
         cards.forEach(card => {
             const Product = {
-              0: {
               Id: card.id,
               quantity: card.quantity
-            }
               //name: card.name,
               //img: card.img,
               //price: card.price
           }
-          ProductList.ProductL[ProductList.length] = Product;
+          ProductList.ProductL[ProductList.length()] = Product;
           });
 
         const cartSnapshot = (await getDocs(collection(db, 'Cart')));
         let foundUser = false;
         let PastCart;
+        
         cartSnapshot.forEach(doc =>{
           //console.log(doc.data().UserName);
           if(doc.data().UserName == user.uid) {
@@ -85,7 +90,6 @@ const OrdersPage = () => {
         else {
           await addDoc(collection(db, 'Cart'), ProductList);
         }
-        
         //console.log("Item added to cart successfully");
       } catch (error) {
         console.error("Error adding item to cart: ", error);
@@ -117,7 +121,7 @@ const OrdersPage = () => {
                 //img: card.img,
                 //price: card.price
             }
-            ProductList.ProductL[ProductList.length] = Product;
+            ProductList.ProductL[ProductList.length()] = Product;
           }
             else {
               const Product = {
@@ -127,7 +131,7 @@ const OrdersPage = () => {
                 //img: card.img,
                 //price: card.price
             }
-            ProductList.ProductL[ProductList.length] = Product;
+            ProductList.ProductL[ProductList.length()] = Product;
             }
           });
           const cartSnapshot = (await getDocs(collection(db, 'Cart')));
@@ -150,7 +154,6 @@ const OrdersPage = () => {
           else {
             await addDoc(collection(db, 'Cart'), ProductList);
           }
-          
           //console.log("Item added to cart successfully");
         } catch (error) {
           console.error("Error adding item to cart: ", error);
@@ -175,7 +178,7 @@ const OrdersPage = () => {
                   if(doc.data().UserName == user.uid) {
                     const data = doc.data().ProductL;
                     console.log(data);
-                     getUpdatedCards(data);
+                    getUpdatedCards(data);
                   }
                 }
                 catch(error) {
@@ -224,6 +227,7 @@ const OrdersPage = () => {
   }
 
     const getUpdatedCards = async (data) => {
+      console.log(Object.values(data));
       const UpdatedCardsmap = Object.values(data).map(async (card) => {
         const moreInfo = await fetchAdditionalData(card.Id);
         console.log(moreInfo);
@@ -277,7 +281,7 @@ const OrdersPage = () => {
 
     // Function to update quantity for a card by ID
     const updateQuantity = (id, newQuantity) => {
-        addToCartButton(id);
+        addToCartButton("BundleBite/SSsnKifmdWDhiqr7RH5p");
         //addToCart(id,newQuantity);
         //getfromCart();
         setCards(
