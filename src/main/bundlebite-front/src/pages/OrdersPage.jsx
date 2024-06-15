@@ -6,7 +6,7 @@ import OrderModalComponent from "../components/OrderModalComponent.jsx";
 import { useState } from "react";
 import axios from "axios";
 import { getCurrentUser } from "../auth.js";
-import {addDoc, getDocs, setDoc, doc} from "firebase/firestore"
+import {addDoc, getDocs, getDoc, setDoc, doc} from "firebase/firestore"
 import { auth, db, collection} from "../firebase-config";
 
 // import { addOrder } from "../auth.js";
@@ -35,15 +35,83 @@ const OrdersPage = () => {
 
     //var[cards,setCards] = useState(getInitialCart);
 
+    const addToCartButton = async(id) => {
+      const user = getCurrentUser();
+      const date = new Date();
+      const date2 = date.getDate();
+      console.log(user.uid);
+      try {
+        // Add a new document with a generated ID to the "Cart" collection
+        let ProductList = {
+          CartStatus: false,
+          Date: date2,
+          ProductL: {
+          },
+          UserName: user.uid
+        };
+
+
+
+        cards.forEach(card => {
+          if(card.id === id) {
+            const Product = {
+              Id: card.id,
+              quantity: card.quantity + 1,
+              name: card.name,
+              img: card.img,
+              price: card.price
+          }
+          ProductList.ProductL[card.id] = Product;
+        }
+          else {
+            const Product = {
+              Id: card.id,
+              quantity: card.quantity,
+              name: card.name,
+              img: card.img,
+              price: card.price
+          }
+          ProductList.ProductL[card.id] = Product;
+          }
+        });
+        const cartSnapshot = (await getDocs(collection(db, 'Cart')));
+        let foundUser = false;
+        let PastCart;
+        cartSnapshot.forEach(doc =>{
+          console.log(doc.data().UserName);
+          if(doc.data().UserName == user.uid) {
+            PastCart = doc;
+            foundUser = true;
+            console.log(doc.data());
+          }
+        }
+        );
+        if (foundUser === true) {
+          console.log("Found User Ref");
+          const firstItemRef = doc(db, 'Cart', PastCart.id);
+          await setDoc(firstItemRef, ProductList);
+        }
+        else {
+          await addDoc(collection(db, 'Cart'), ProductList);
+        }
+
+        console.log("Item added to cart successfully");
+      } catch (error) {
+        console.error("Error adding item to cart: ", error);
+      }
+    }
+
+
 
     const addToCart = async(id, newQuantity) => {
         const user = getCurrentUser();
         console.log(user.uid);
+        const date = new Date();
         try {
           // Add a new document with a generated ID to the "Cart" collection
           let ProductList = {
             CartStatus: false,
-            Date: Date.toString(),
+            Date: date,
             ProductL: {
             },
             UserName: user.uid
@@ -54,37 +122,37 @@ const OrdersPage = () => {
               const Product = {
                 Id: card.id,
                 quantity: newQuantity,
-                name: card.name,
-                img: card.img,
-                price: card.price
+                //name: card.name,
+                //img: card.img,
+                //price: card.price
             }
-            ProductList.ProductL[card.id] = Product;
+            ProductList.ProductL[0] = Product;
           }
             else {
               const Product = {
                 Id: card.id,
                 quantity: card.quantity,
-                name: card.name,
-                img: card.img,
-                price: card.price
+                //name: card.name,
+                //img: card.img,
+                //price: card.price
             }
-            ProductList.ProductL[card.id] = Product;
+            ProductList.ProductL[0] = Product;
             }
           });
           const cartSnapshot = (await getDocs(collection(db, 'Cart')));
           let foundUser = false;
           let PastCart;
           cartSnapshot.forEach(doc =>{
-            console.log(doc.data().UserName);
+            //console.log(doc.data().UserName);
             if(doc.data().UserName == user.uid) {
               PastCart = doc;
               foundUser = true;
-              console.log(doc.data());
+              //console.log(doc.data());
             }
           }
           );
           if (foundUser === true) {
-            console.log("Found User Ref");
+            //console.log("Found User Ref");
             const firstItemRef = doc(db, 'Cart', PastCart.id);
             await setDoc(firstItemRef, ProductList);
           }
@@ -92,7 +160,7 @@ const OrdersPage = () => {
             await addDoc(collection(db, 'Cart'), ProductList);
           }
           
-          console.log("Item added to cart successfully");
+          //console.log("Item added to cart successfully");
         } catch (error) {
           console.error("Error adding item to cart: ", error);
         }
@@ -101,7 +169,6 @@ const OrdersPage = () => {
 
 
     const getfromCart = async() => {
-        try {
           const user = getCurrentUser();
           console.log('Getting the user...')
           if (user){
@@ -112,29 +179,95 @@ const OrdersPage = () => {
               
               // Loop through the documents and log the data
               cartSnapshot.forEach(doc => {
-                if(doc.data().UserName == user.uid) {
-                const data = doc.data().ProductL;
-                setCards(Object.values(data).map(card => ({
+                
+                try{
+                  if(doc.data().UserName == user.uid) {
+                    const data = doc.data().ProductL;
+                    console.log(data);
+                     getUpdatedCards(data);
+                  }
+                }
+                catch(error) {
+                  console.error("Error fetching orders:", error.message);
+                }
+                //console.log(data[0].Id.id);
+                /*
+                setCards(Object.values(data).map(
+                  card => ({
                   id: card.Id,
                   quantity: card.quantity,
-                  name: card.name,
-                  img: card.img,
-                  price: card.price
-              })));
-                    //console.log(data[i]);
-                  }   
-                });
-                //console.log(doc.id, '=>', doc.data().ProductArray);
-              }
-            catch (error) {
-              console.error("Error fetching cart data: ", error);
-            }
+                  //name: card.name,
+                  //img: card.img,
+                  //price: card.price
+          
+
+            getUpdatedCards();
           }
-      }
+        });
+            /*
+              setCards(Object.values(data).map (async (card) => {
+                const moreInfo = await fetchAdditionalData(card.Id.id);
+                console.log(moreInfo);
+
+                const newCard = {
+                    id: card.Id.id,
+                    //id:0,
+                    quantity: card.quantity,
+                    name: moreInfo.name,
+                    img: moreInfo.img,
+                    price: moreInfo.price
+                }
+                console.log(newCard);
+                return newCard;
+            }));
+          }});
+          */
+                //console.log(doc.id, '=>', doc.data().ProductArray);
+              
+      });
+    }
       catch (error) {
         console.error("Error fetching orders:", error.message);
       }
     }
+  }
+
+    const getUpdatedCards = async (data) => {
+      const UpdatedCardsmap = Object.values(data).map(async (card) => {
+        const moreInfo = await fetchAdditionalData(card.Id);
+        console.log(moreInfo);
+        const newCard = {
+            id: card.Id,
+            //id:0,
+            quantity: card.quantity,
+            name: moreInfo.name,
+            img: '"/images/design/' + moreInfo.img,
+            price: moreInfo.price
+        }
+        console.log(newCard);
+        return newCard;
+    });
+    const updatedCards = await Promise.all(UpdatedCardsmap);
+    setCards(updatedCards);
+  }
+
+    const fetchAdditionalData = async (id) => {
+      console.log(id);
+      const BundleBite = doc(db, id);
+      const docSnapshot = await getDoc(BundleBite)
+      console.log(docSnapshot);
+      const info = docSnapshot.data();
+        //console.log(info);
+          console.log("Found Product");
+          const additionalData = {
+            name: info.name,
+            price: info.price,
+            img: info.imagePath
+          }
+
+
+        return additionalData;
+      }
 
     const openModal = () => {
         setShowModal("block"); // Show the modal
