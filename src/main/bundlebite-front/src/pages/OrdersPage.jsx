@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import * as PropTypes from "prop-types";
 import SidebarComponent from "../components/SidebarComponent.jsx";
 import OrderCardComponent from "../components/OrderCardComponent.jsx";
@@ -14,51 +14,84 @@ import { auth, db, collection} from "../firebase-config";
 const OrdersPage = () => {
     const [showModal, setShowModal] = useState("none");
     // Define state for cards array
+    
     var [cards, setCards] = useState([
-        { id: 0, quantity: 1 , name:"SOUVLAKI", img:process.env.PUBLIC_URL + "/images/design/souvlaki.png", price:6}, // Initial state for card 1
-        { id: 1, quantity: 2, name:"VODKA PASTA", img:process.env.PUBLIC_URL + "/images/design/pasta.png", price:8}, // Initial state for card 2
-        { id: 2, quantity: 2, name: "PIZZA MARGHERITA", img:process.env.PUBLIC_URL + "/images/design/pizza.png", price:7}    ,
-        { id: 3, quantity: 1, name: "BURRITO", img:process.env.PUBLIC_URL + "/images/design/burrito.png", price:10},
-        { id: 4, quantity: 1, name: "POKE BOWL", img:process.env.PUBLIC_URL + "/images/design/poke.png", price:12},
-        { id: 5, quantity: 1, name: "TACO", img:process.env.PUBLIC_URL + "/images/design/taco.png", price:9},
-        { id: 6, quantity: 1, name: "VOL-AU-VENT", img:process.env.PUBLIC_URL + "/images/design/volauvent.png", price:11},
-        { id: 7, quantity: 1, name: "CHILI CON CARNE", img:process.env.PUBLIC_URL + "/images/design/chili.png", price:13},
-        { id: 8, quantity: 1, name: "SHAH PILAF", img:process.env.PUBLIC_URL + "/images/design/shah.png", price:14},
-        { id: 9, quantity: 1, name: "SPANAKOPITA", img:process.env.PUBLIC_URL + "/images/design/spanakopita.png", price:15}
+        { id: 0, quantity: 0 , name:"SOUVLAKI", img:process.env.PUBLIC_URL + "/images/design/souvlaki.png", price:6}, // Initial state for card 1
+        { id: 1, quantity: 0, name:"VODKA PASTA", img:process.env.PUBLIC_URL + "/images/design/pasta.png", price:8}, // Initial state for card 2
+        { id: 2, quantity: 0, name: "PIZZA MARGHERITA", img:process.env.PUBLIC_URL + "/images/design/pizza.png", price:7}    ,
+        { id: 3, quantity: 0, name: "BURRITO", img:process.env.PUBLIC_URL + "/images/design/burrito.png", price:10},
+        { id: 4, quantity: 0, name: "POKE BOWL", img:process.env.PUBLIC_URL + "/images/design/poke.png", price:12},
+        { id: 5, quantity: 0, name: "TACO", img:process.env.PUBLIC_URL + "/images/design/taco.png", price:9},
+        { id: 6, quantity: 0, name: "VOL-AU-VENT", img:process.env.PUBLIC_URL + "/images/design/volauvent.png", price:11},
+        { id: 7, quantity: 0, name: "CHILI CON CARNE", img:process.env.PUBLIC_URL + "/images/design/chili.png", price:13},
+        { id: 8, quantity: 0, name: "SHAH PILAF", img:process.env.PUBLIC_URL + "/images/design/shah.png", price:14},
+        { id: 9, quantity: 0, name: "SPANAKOPITA", img:process.env.PUBLIC_URL + "/images/design/spanakopita.png", price:15}
     ]);
 
-    const addToCart = async() => {
+    
+    useEffect(() => {
+        getfromCart();
+    },[]);
+
+    //var[cards,setCards] = useState(getInitialCart);
+
+
+    const addToCart = async(id, newQuantity) => {
         const user = getCurrentUser();
+        console.log(user.uid);
         try {
           // Add a new document with a generated ID to the "Cart" collection
-          const ProductList = {
+          let ProductList = {
             CartStatus: false,
             Date: Date.toString(),
             ProductL: {
-                test: {
-                Id: 0,
-                quantity: 0,
-                name: "A",
-                img: "B",
-                price: "C",
-                }
             },
-            UserName: "Boo"
+            UserName: user.uid
           };
 
           cards.forEach(card => {
-            const Product = {
+            if(card.id === id) {
+              const Product = {
                 Id: card.id,
-                quantity: card.quantity + 1,
+                quantity: newQuantity,
                 name: card.name,
                 img: card.img,
                 price: card.price
             }
             ProductList.ProductL[card.id] = Product;
+          }
+            else {
+              const Product = {
+                Id: card.id,
+                quantity: card.quantity,
+                name: card.name,
+                img: card.img,
+                price: card.price
+            }
+            ProductList.ProductL[card.id] = Product;
+            }
           });
-          const cartSnapshot = (await getDocs(collection(db, 'Cart'))).docs[0];
-          const firstItemRef = doc(db, 'Cart', cartSnapshot.id);
+          const cartSnapshot = (await getDocs(collection(db, 'Cart')));
+          let foundUser = false;
+          let PastCart;
+          cartSnapshot.forEach(doc =>{
+            console.log(doc.data().UserName);
+            if(doc.data().UserName == user.uid) {
+              PastCart = doc;
+              foundUser = true;
+              console.log(doc.data());
+            }
+          }
+          );
+          if (foundUser === true) {
+            console.log("Found User Ref");
+            const firstItemRef = doc(db, 'Cart', PastCart.id);
             await setDoc(firstItemRef, ProductList);
+          }
+          else {
+            await addDoc(collection(db, 'Cart'), ProductList);
+          }
+          
           console.log("Item added to cart successfully");
         } catch (error) {
           console.error("Error adding item to cart: ", error);
@@ -79,28 +112,21 @@ const OrdersPage = () => {
               
               // Loop through the documents and log the data
               cartSnapshot.forEach(doc => {
-                const data = doc.data().ProductArray;
-                for(let i = 0; i < data.length; i++){
-                    const info = data[i];
-                    setCards(
-                        cards.map(card => {
-                            if (card.id === info.id) {
-                                return {
-                                    ...card,
-                                    quantity: info.quantity,
-                                    name: info.name,
-                                    img: info.url,
-                                    price: info.price
-                                };
-                            }
-                            return card;
-                        })
-                    );
-                    console.log(data[i]);
-                }
-                console.log(doc.id, '=>', doc.data().ProductArray);
-              });
-            } catch (error) {
+                if(doc.data().UserName == user.uid) {
+                const data = doc.data().ProductL;
+                setCards(Object.values(data).map(card => ({
+                  id: card.Id,
+                  quantity: card.quantity,
+                  name: card.name,
+                  img: card.img,
+                  price: card.price
+              })));
+                    //console.log(data[i]);
+                  }   
+                });
+                //console.log(doc.id, '=>', doc.data().ProductArray);
+              }
+            catch (error) {
               console.error("Error fetching cart data: ", error);
             }
           }
@@ -127,9 +153,9 @@ const OrdersPage = () => {
 
     // Function to update quantity for a card by ID
     const updateQuantity = (id, newQuantity) => {
-        getfromCart();
-        addToCart();
-            setCards(
+        addToCart(id,newQuantity);
+        //getfromCart();
+        setCards(
                 cards.map(card => {
                     if (card.id === id) {
                         console.log("card id: " + card.id + " new quantity: " + newQuantity)
