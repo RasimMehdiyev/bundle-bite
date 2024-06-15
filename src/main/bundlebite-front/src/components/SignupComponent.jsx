@@ -10,32 +10,33 @@ const SignupComponent = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        signUp(email, password, name)
-            .then((response) => {
-                console.log("Signed up successfully");
-                // reload
-                window.location.reload();
-
-                const token = response.token
-                axios.post("/users/setClaims/", {
-                    name: name,
-                },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                ).then(() => {
-                    navigate("/");
+        try {
+            const { user, token } = await signUp(email, password, name); // Ensure user and token are fetched
+            console.log("Signed up successfully, token:", token); // Log the token for verification
+    
+            if (token) { // Proceed only if the token is available
+                await axios.post("/users/setClaims/", { name: user.displayName }, {
+                    headers: { Authorization: `Bearer ${token}` },
+                }).then(() => {
                     console.log("User claims updated successfully");
                 }).catch((error) => {
                     console.error("Error updating user claims:", error);
                 });
-            });
-        
+            } else {
+                console.error("No token available to set claims");
+            }
+        } catch (error) {
+            console.error("Error during signup or setting claims:", error);
+        } finally {
+            // Redirect to homepage regardless of the outcome
+            navigate("/");
+        }
     };
+    
+    
+    
 
     return (
         <div className="auth-main">

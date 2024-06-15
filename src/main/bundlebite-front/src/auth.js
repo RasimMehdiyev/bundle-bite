@@ -6,29 +6,32 @@ import { useState, useEffect } from 'react';
 
 export const signUp = async(email, password, name) => {
     try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed in
-                const user = userCredential.user;
-                const usersRef = doc(db, "users", user.uid);
-                // set displayName
-                updateProfile(user, {
-                    displayName: name,
-                }).then(() => {
-                    console.log("Display name set");
-                }).catch((error) => {
-                    console.error("Error setting display name:", error);
-                });
+        // Using await directly instead of .then()
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
 
-                setDoc(usersRef, {
-                    email: email,
-                    uid: user.uid,
-                    name: user.displayName,
-                    role: "customer"
-                });
-            })
+        // Update profile asynchronously
+        await updateProfile(user, {
+            displayName: name,
+        });
+        console.log("Display name set");
+
+        // Create or update the user document
+        const usersRef = doc(db, "users", user.uid);
+        await setDoc(usersRef, {
+            email: email,
+            uid: user.uid,
+            name: user.displayName, // Here it uses the name from the profile update
+            role: "customer"
+        });
+
+        // Get token
+        const token = await user.getIdToken(); // Make sure to wait for the token
+        return { user, token }; // Return the user and token
+
     } catch (error) {
-        console.error("Error signing up:", error.message);
+        console.error("Error signing up:", error);
+        throw error; // Re-throw to handle it in the calling function
     }
 };
 
