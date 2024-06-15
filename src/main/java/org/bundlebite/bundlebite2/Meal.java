@@ -15,13 +15,17 @@ public class Meal{
     public Meal() {
     }
 
-    public Meal(String name, String id, double price, int quantity, String imagePath) {
+    public Meal(String name, String id, double price, int quantity, String imagePath, List<Ingredient> ingredients, boolean availability) {
         this.name = name;
         this.id = id;
         this.price = price;
         this.quantity = quantity;
         this.imagePath = imagePath;
+        this.ingredients = ingredients;
+        this.availability = availability;
     }
+
+
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;

@@ -1,49 +1,81 @@
-import React from "react";
+import React, {useEffect} from "react";
 import * as PropTypes from "prop-types";
 import SidebarComponent from "../components/SidebarComponent.jsx";
 import OrderCardComponent from "../components/OrderCardComponent.jsx";
 import OrderModalComponent from "../components/OrderModalComponent.jsx";
 import { useState } from "react";
-import axios from "axios";
-import {getCurrentUser, submitCart} from "../auth.js"
+import {getCurrentUser, submitCart, getCart} from "../auth.js"
+import { doc,db,getDoc, query,where,collection,getDocs } from "../firebase-config.js";
+
+
+// import { addOrder } from "../auth.js";
 
 const OrdersPage = () => {
-
     const [showModal, setShowModal] = useState("none");
     
 
     // Define state for cards array
     const [cards, setCards] = useState([
-        { ref: "QmKJGOjroos8Sa45tpyt", quantity: 1 , name:"SHAH PILAF", img:process.env.PUBLIC_URL + "/images/design/souvlaki.png", price:6}, // Initial state for card 1
-        { ref: "kw35uS6JfAqZOeHZyO2C", quantity: 2, name:"VODKA PASTA", img:process.env.PUBLIC_URL + "/images/design/pasta.png", price:8}, // Initial state for card 2
+        // { ref: "QmKJGOjroos8Sa45tpyt", quantity: 1 , name:"SHAH PILAF", img:process.env.PUBLIC_URL + "/images/design/souvlaki.png", price:6}, // Initial state for card 1
+        // { ref: "kw35uS6JfAqZOeHZyO2C", quantity: 2, name:"VODKA PASTA", img:process.env.PUBLIC_URL + "/images/design/pasta.png", price:8}, // Initial state for card 2
     ]);
 
-    const submitCartLocal = () =>{
+    const submitCartLocal = () => {
         console.log("Cart submitted");
-        // put cards in "items":[] using ref to cards
-        // ref example: "/BundleBite/card.ref"
         let items = [];
-        // based on updated quantity
+        // Convert each item to a Firestore DocumentReference
         cards.forEach(card => {
             for (let i = 0; i < card.quantity; i++) {
-                items.push("/BundleBite/" + card.ref);
+                items.push(doc(db, "BundleBite", card.ref)); // Create a document reference
             }
         });
         
         let orderDate = new Date();
         let uid = "O" + Math.random().toString(36).substr(2, 9).toUpperCase();
         let order = {
-            "items": items,
-            "orderDate": orderDate,
-            "status": "pending",
-            "totalPrice": cards.reduce((acc, card) => acc + card.price * card.quantity, 0),
-            "uid": uid,
-            "user":"/users/" + getCurrentUser().uid
+            items: items, // These are now Firestore DocumentReferences
+            orderDate: orderDate,
+            status: "pending",
+            totalPrice: cards.reduce((acc, card) => acc + card.price * card.quantity, 0),
+            uid: uid,
+            user: doc(db, "users", getCurrentUser().uid) // Convert user reference as well
         }
         console.log(order);
         submitCart(order);
     }
-
+        useEffect(() => {
+            const fetchCartItems = async () => {
+                const user = getCurrentUser();
+                if (user) {
+                    const cartsRef = collection(db, "carts");
+                    const q = query(cartsRef, where("user", "==", doc(db, "users", user.uid))); // Assuming there's a user field that stores references
+                    const querySnapshot = await getDocs(q);
+                    if (!querySnapshot.empty) {
+                        let fetchedCards = [];
+                        for (let doc of querySnapshot.docs) {
+                            const data = doc.data();
+                            for (let itemRef of data.items) { // Assuming 'items' holds references to the meal documents
+                                const mealSnap = await getDoc(itemRef);
+                                if (mealSnap.exists()) {
+                                    const mealData = mealSnap.data();
+                                    fetchedCards.push({
+                                        ref: itemRef.id, // Using Firestore document ID
+                                        name: mealData.name,
+                                        img: mealData.imagePath, // Make sure imagePath exists in the document
+                                        price: mealData.price,
+                                        quantity: 1 // Default to 1 or adjust as needed
+                                    });
+                                }
+                            }
+                        }
+                        console.log("Fetched cards:", fetchedCards);
+                        setCards(fetchedCards);
+                    }
+                }
+            };
+    
+            fetchCartItems();
+        }, []);
 
     const openModal = () => {
         setShowModal("block"); // Show the modal

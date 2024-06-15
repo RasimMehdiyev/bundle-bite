@@ -16,11 +16,21 @@ const OrderCardComponent = ({card, updateQuantity}) => {
         }
     };
 
+    const handleCancel = () => {
+        if (card.quantity > 1) {
+            updateQuantity(card.id, 0);
+        }
+    }
+
+    
+
     return(
     <div className="order-card">
         <div className="order-card-left">
-            <img className="trash-svg" src={process.env.PUBLIC_URL + "/images/trash-2.svg"} alt="" />
-            <img src={process.env.PUBLIC_URL + card.img} alt="" />
+        <div onClick={handleCancel} style={{ cursor: 'pointer' }}>
+            <img className="trash-svg" src={process.env.PUBLIC_URL + "/images/trash-2.svg"} alt="Trash Icon" />
+        </div>
+            <img src={process.env.PUBLIC_URL + "/images/design/" + card.img} alt="" />
             <span className="order-details">
                 <p className="order-name">{card.name.toUpperCase()}</p>
                 <span className="details">

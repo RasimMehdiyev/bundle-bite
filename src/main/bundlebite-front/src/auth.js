@@ -1,4 +1,4 @@
-import { auth, db, setDoc, doc } from './firebase-config';
+import { auth, db, setDoc, doc, collection, getDocs, where, query } from './firebase-config';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 import { useState, useEffect } from 'react';
 
