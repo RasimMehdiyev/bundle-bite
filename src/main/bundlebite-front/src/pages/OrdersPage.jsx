@@ -39,17 +39,18 @@ const OrdersPage = () => {
         console.log(order_local);
 
         let itemsToSubmit = [];
-        order_local.items.forEach(async item => {
-            // use cards array since it has quantity
-            let itemSnap = await getDoc(item);
-            let itemData = itemSnap.data();
-            itemsToSubmit.push({
-                "id": item.id,
-                "name": itemData.name,
-                "price": itemData.price,
-                "quantity": cards.find(card => card.ref === item.id).quantity
-            });
-        });
+        for (const itemRef of order_local.items) {
+            const itemSnap = await getDoc(itemRef);
+            if (itemSnap.exists()) {
+                const itemData = itemSnap.data();
+                itemsToSubmit.push({
+                    "id": itemRef.id,
+                    "name": itemData.name,
+                    "price": itemData.price,
+                    "quantity": cards.find(card => card.ref === itemRef.id).quantity
+                });
+            }
+        }
 
         let order = {
             "orderDate": order_local.orderDate,
@@ -60,7 +61,8 @@ const OrdersPage = () => {
             "items": itemsToSubmit
         }
         console.log(order);
-        let token = await user.getIdToken()
+        let token = await user.getIdToken();
+        let axios_response;
         try {
             axios.post('/users/order/checkout', order,
                 {
@@ -72,6 +74,7 @@ const OrdersPage = () => {
 
             )
                 .then(response => {
+                    axios_response = response.data;
                     console.log(response.data);
                 })
                 .catch(error => {
@@ -82,9 +85,15 @@ const OrdersPage = () => {
             console.error("There was an error submitting the order!", error);
         }
 
-
-        submitCart(order_local);
-        setCards([]);
+        if (axios_response === true) {
+            submitCart(order_local);
+            setCards([]);
+            console.log("Order submitted successfully!");
+        }
+        else {
+            console.error("There was an error submitting the order!");
+        }
+        
     }
     useEffect(() => {
             const fetchCartItems = async () => {
@@ -178,7 +187,7 @@ const OrdersPage = () => {
         
             testCart = cards.filter(card => card.ref !== ref)
             setCards(testCart);
-            
+
             console.log("Removed item with ref: " + ref);
             console.log(testCart);
         }
