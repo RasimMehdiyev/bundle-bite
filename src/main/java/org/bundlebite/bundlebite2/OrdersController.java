@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.bundlebite.bundlebite2.utils.*;
 import org.bundlebite.bundlebite2.utils.ApiCall;
 import org.bundlebite.bundlebite2.Supplier;
+import org.bundlebite.bundlebite2.utils.ordersToSuppliers.SupplierOrderRequest;
 
 
 @RestController
@@ -288,8 +289,10 @@ public class OrdersController {
     }
 
     @PostMapping("/users/order/checkout")
-    public FinaApiCall receiveOrder(@RequestBody Order order)
+    public boolean receiveOrder(@RequestBody Order order)
     {
+
+        
         Firestore db = FirestoreClient.getFirestore();
         List<ApiCall> apiCalls = processOrder(order,db);
         List<Supplier> suppliers = organizeIngredientsSuppliers(apiCalls, db);
@@ -297,7 +300,16 @@ public class OrdersController {
         finalApiCall.setOrderRequestId(order.getUid());
         finalApiCall.setApiKey("rasimrasim14");
         finalApiCall.setSuppliers(suppliers);
-        return finalApiCall;
+        Map<String, SupplierOrderRequest> supplierOrderRequests = new HashMap<>();
+        boolean result = false;
+        try{
+           supplierOrderRequests = finalApiCall.convertToSupplierOrderRequests();
+           result = finalApiCall.sendOrdersWithRollback(true, supplierOrderRequests, "BundleBite");
+        } catch (Exception e){
+            logger.error("Error while converting FinaApiCall to SupplierOrderRequest: {}", e.getMessage());
+        }
+        
+        return result;
     }
 
     public List<ApiCall> prepareApiCall(Order order,Firestore db){
