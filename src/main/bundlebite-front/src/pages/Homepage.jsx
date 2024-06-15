@@ -9,7 +9,8 @@ ProductCard.propTypes = {
     img: PropTypes.string,
     price: PropTypes.string,
     name: PropTypes.string,
-    availability: PropTypes.bool
+    availability: PropTypes.bool,
+    id: PropTypes.string
 };
 
 const Homepage = () => {
@@ -29,6 +30,7 @@ const Homepage = () => {
             });
     }, []);
 
+
     return (
         <div className="page" id="contentdiv">
             <SidebarComponent activeLink="/shop" username="John Doe"/>
@@ -39,6 +41,7 @@ const Homepage = () => {
                     {meals.map(meal => (
                         <ProductCard 
                             key={meal.id} 
+                            id={meal.id}
                             img={process.env.PUBLIC_URL + "/images/design/" + meal.imagePath} 
                             name={meal.name.toUpperCase()} 
                             price={meal.price.toString()}

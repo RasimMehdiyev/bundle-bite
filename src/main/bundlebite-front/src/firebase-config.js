@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 
-import { getFirestore, collection, doc, setDoc, addDoc, getDoc, getDocs, where, query } from 'firebase/firestore'
+import { getFirestore, collection, doc, setDoc, addDoc, getDoc, getDocs, where, query, updateDoc, arrayUnion } from 'firebase/firestore'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -25,4 +25,4 @@ const analytics = getAnalytics(app);
 const auth = getAuth();
 const db = getFirestore(app);
 // const admin = require('firebase-admin');
-export { auth, db, collection, doc, setDoc, addDoc, getDoc, getDocs, where, query };
+export { auth, db, collection, doc, setDoc, addDoc, getDoc, getDocs, where, query, updateDoc, arrayUnion };

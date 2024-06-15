@@ -93,7 +93,6 @@ export const useAuth = () => {
         // Return the unsubscribe function to be called on component unmount
         return unsubscribe;
     }, [user]);
-    // console.log("User:", user);
     return { user, loading, role, name };
 }
 
@@ -122,5 +121,27 @@ export const submitCart = (order) => {
     if (user) {
         const ordersRef = doc(db, "orders", order.uid);
         setDoc(ordersRef, order);
+        clearCart();
+    }
+
+}
+
+export const clearCart = async() => {
+    const user = getCurrentUser();
+    if (user) {
+        const cartsRef = collection(db, "carts");
+        const q = query(cartsRef, where("user", "==", doc(db, "users", user.uid)));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            const cartDoc = querySnapshot.docs[0];
+            await setDoc(cartDoc.ref, {
+                items: [],
+                lastUpdated: new Date(),
+                status: true,
+                totalPrice: 0,
+                uid: cartDoc.id,
+                user: doc(db, "users", user.uid)
+            });
+        }
     }
 }

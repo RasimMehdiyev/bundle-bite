@@ -15,10 +15,7 @@ const OrdersPage = () => {
     
 
     // Define state for cards array
-    const [cards, setCards] = useState([
-        // { ref: "QmKJGOjroos8Sa45tpyt", quantity: 1 , name:"SHAH PILAF", img:process.env.PUBLIC_URL + "/images/design/souvlaki.png", price:6}, // Initial state for card 1
-        // { ref: "kw35uS6JfAqZOeHZyO2C", quantity: 2, name:"VODKA PASTA", img:process.env.PUBLIC_URL + "/images/design/pasta.png", price:8}, // Initial state for card 2
-    ]);
+    const [cards, setCards] = useState([]);
 
     const submitCartLocal = () => {
         console.log("Cart submitted");
@@ -54,26 +51,41 @@ const OrdersPage = () => {
                         let fetchedCards = [];
                         for (let doc of querySnapshot.docs) {
                             const data = doc.data();
-                            for (let itemRef of data.items) { // Assuming 'items' holds references to the meal documents
+                            for (let itemRef of data.items) {
                                 const mealSnap = await getDoc(itemRef);
                                 if (mealSnap.exists()) {
                                     const mealData = mealSnap.data();
-                                    fetchedCards.push({
-                                        ref: itemRef.id, // Using Firestore document ID
-                                        name: mealData.name,
-                                        img: mealData.imagePath, // Make sure imagePath exists in the document
-                                        price: mealData.price,
-                                        quantity: 1 // Default to 1 or adjust as needed
-                                    });
+                                    let found = false; // Flag to track if the item is found in the existing list
+                            
+                                    // Loop through fetchedCards to see if the item already exists
+                                    for (let fetchedCard of fetchedCards) {
+                                        if (fetchedCard.ref === itemRef.id) {
+                                            fetchedCard.quantity++; // Increment quantity if found
+                                            found = true;
+                                            break; // Stop checking further as we found the item
+                                        }
+                                    }
+                            
+                                    // If the item was not found in the list, add it as a new entry
+                                    if (!found) {
+                                        fetchedCards.push({
+                                            ref: itemRef.id, // Firestore document ID
+                                            name: mealData.name,
+                                            img: mealData.imagePath, // Ensure imagePath exists in the document
+                                            price: mealData.price,
+                                            quantity: 1 // Initialize with a quantity of 1
+                                        });
+                                    }
+                                } else {
+                                    console.log("No meal data found for ref:", itemRef.id);
                                 }
                             }
-                        }
                         console.log("Fetched cards:", fetchedCards);
                         setCards(fetchedCards);
                     }
                 }
             };
-    
+        }
             fetchCartItems();
         }, []);
 
