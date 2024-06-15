@@ -55,7 +55,10 @@ const OrdersPage = () => {
           quantity: 1
         }
 
-        ProductList.ProductL[ProductList.length()] = Prod;
+        let i = 0;
+
+        ProductList.ProductL[0] = Prod;
+        i++;
 
 
         cards.forEach(card => {
@@ -66,8 +69,10 @@ const OrdersPage = () => {
               //img: card.img,
               //price: card.price
           }
-          ProductList.ProductL[ProductList.length()] = Product;
-          });
+          ProductList.ProductL[i] = Product;
+          i++;
+          }
+        );
 
         const cartSnapshot = (await getDocs(collection(db, 'Cart')));
         let foundUser = false;
@@ -102,6 +107,7 @@ const OrdersPage = () => {
         const user = getCurrentUser();
         console.log(user.uid);
         const date = new Date();
+        let i = 0;
         try {
           // Add a new document with a generated ID to the "Cart" collection
           let ProductList = {
@@ -121,7 +127,8 @@ const OrdersPage = () => {
                 //img: card.img,
                 //price: card.price
             }
-            ProductList.ProductL[ProductList.length()] = Product;
+            ProductList.ProductL[i] = Product;
+            i++;
           }
             else {
               const Product = {
@@ -131,7 +138,8 @@ const OrdersPage = () => {
                 //img: card.img,
                 //price: card.price
             }
-            ProductList.ProductL[ProductList.length()] = Product;
+            ProductList.ProductL[i] = Product;
+            i++;
             }
           });
           const cartSnapshot = (await getDocs(collection(db, 'Cart')));
@@ -281,8 +289,8 @@ const OrdersPage = () => {
 
     // Function to update quantity for a card by ID
     const updateQuantity = (id, newQuantity) => {
-        addToCartButton("BundleBite/SSsnKifmdWDhiqr7RH5p");
-        //addToCart(id,newQuantity);
+        //addToCartButton("BundleBite/SSsnKifmdWDhiqr7RH5p");
+        addToCart(id,newQuantity);
         //getfromCart();
         setCards(
                 cards.map(card => {
