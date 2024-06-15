@@ -135,6 +135,63 @@ public class FinaApiCall {
     }
 
     public static void main(String[] args) {
+        testConversion();
+    }
+
+    private static void testConversion(){
+        Ingredient rice = new Ingredient("/generalstore/0", "rice", 2);
+        Ingredient pasta = new Ingredient("generalstore/3", "pasta", 2);
+        Ingredient vodka = new Ingredient("generalstore/2", "vodka", 4);
+
+        // Ingredients for vegetables
+        Ingredient chestnut = new Ingredient("/vegetables/8", "chestnut", 2);
+
+        // Ingredients for animalprods
+        Ingredient beef = new Ingredient("/animalprods/0", "beef", 4);
+
+        // Suppliers
+        Supplier generalstore = new Supplier("ukLe59IS0IIs0eA2cWQJ", "generalstore");
+        generalstore.addIngredient(rice);
+        generalstore.addIngredient(pasta);
+        generalstore.addIngredient(vodka);
+
+        Supplier vegetables = new Supplier("FGKVJudtYK1j2y6Gndt3", "vegetables");
+        vegetables.addIngredient(chestnut);
+
+        Supplier animalprods = new Supplier("uwJ20p5WEOQPHlKmrFd1", "animalprods");
+        animalprods.addIngredient(beef);
+
+        // List of suppliers
+        List<Supplier> suppliers = new ArrayList<>();
+        suppliers.add(generalstore);
+        suppliers.add(vegetables);
+        suppliers.add(animalprods);
+
+        // FinaApiCall object
+        FinaApiCall apiCall = new FinaApiCall("025781975", suppliers, "rasimrasim14");
+
+        // Output the details
+        System.out.println("Order Request ID: " + apiCall.getOrderRequestId());
+        for (Supplier supplier : apiCall.getSuppliers()) {
+            System.out.println("Supplier ID: " + supplier.getId());
+            System.out.println("Linkroot: " + supplier.getLinkroot());
+            for (Ingredient ingredient : supplier.getIngredients()) {
+                System.out.println("  Ingredient: " + ingredient.getName());
+                System.out.println("  ID Link: " + ingredient.getIdLink());
+                System.out.println("  Quantity: " + ingredient.getQuantity());
+            }
+        }
+        try {
+            Map<String, SupplierOrderRequest> map = apiCall.convertToSupplierOrderRequests();
+            System.out.println("Put debug red button in this line then look at check variable map");
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println(e);
+        }
+        
+    }
+
+    private static void getAcidOrders() {
         // Initialize parameters
         String brokerHeader = "exampleBroker";
 

@@ -304,7 +304,7 @@ public class OrdersController {
         boolean result = false;
         try{
            supplierOrderRequests = finalApiCall.convertToSupplierOrderRequests();
-           result = finalApiCall.sendOrdersWithRollback(true, supplierOrderRequests, "BundleBite");
+           result = FinaApiCall.sendOrdersWithRollback(true, supplierOrderRequests, "BundleBite");
         } catch (Exception e){
             logger.error("Error while converting FinaApiCall to SupplierOrderRequest: {}", e.getMessage());
         }

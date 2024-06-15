@@ -36,32 +36,32 @@ public class HomepageUtil {
     private static final Logger logger = LoggerFactory.getLogger(HomepageUtil.class);
     private final static String[] suppliers = {"animalprods", "vegetables", "generalstore"};
     private final static boolean areSuppliersLocal = false;
-    public static void main(String[] args) {
-        System.out.println("Hello from homepage util!");
+    // public static void main(String[] args) { //If you dont have Omar's permission don't uncomment this
+    //     System.out.println("Hello from homepage util!");
 
-        Map<String,Integer> map = HomepageUtil.getAllQuantitiesFromSuppliers(suppliers);
-        FirebaseInit firebaseInit = new FirebaseInit();
-        firebaseInit.initialize();
-        List<Meal> meals = getMealsFirebase();
-        System.out.println("map is:");
-        printMap(map);
+    //     Map<String,Integer> map = HomepageUtil.getAllQuantitiesFromSuppliers(suppliers);
+    //     FirebaseInitDummy firebaseInit = new FirebaseInitDummy();
+    //     firebaseInit.initialize();
+    //     List<Meal> meals = getMealsFirebase();
+    //     System.out.println("map is:");
+    //     printMap(map);
 
-        for (Meal m: meals){
-            System.out.println("Meal id is " + m.getId() + " and the name is " + m.getName());
-            List<Ingredient> ings = m.getIngredients();
-            System.out.println("Ingredient of meal: \n ");
-            for (Ingredient ing: ings){
-                System.out.printf("idLink %s, quantity %d%n", ing.getIdLink(), ing.getQuantity());
-            }
-        }
-        System.out.println("Actual ingredients");
-        printMap(map);
-        List<Meal> finalMeals = checkAvailability(map, meals);
-        for (Meal m: finalMeals){
-            System.out.printf("meal %s's availability is %s%n", m.getName(), m.getAvailability());
-        }
+    //     for (Meal m: meals){
+    //         System.out.println("Meal id is " + m.getId() + " and the name is " + m.getName());
+    //         List<Ingredient> ings = m.getIngredients();
+    //         System.out.println("Ingredient of meal: \n ");
+    //         for (Ingredient ing: ings){
+    //             System.out.printf("idLink %s, quantity %d%n", ing.getIdLink(), ing.getQuantity());
+    //         }
+    //     }
+    //     System.out.println("Actual ingredients");
+    //     printMap(map);
+    //     List<Meal> finalMeals = checkAvailability(map, meals);
+    //     for (Meal m: finalMeals){
+    //         System.out.printf("meal %s's availability is %s%n", m.getName(), m.getAvailability());
+    //     }
         
-    }
+    // }
 
     public static List<Meal> getMealsForHomepage(){
         Map<String,Integer> map = HomepageUtil.getAllQuantitiesFromSuppliers(suppliers);
