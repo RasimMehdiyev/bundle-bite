@@ -104,7 +104,7 @@ public class FinaApiCall {
                     System.out.println("Order successful for linkroot: " + linkroot + " Response: " + response);
                     successfulOrders.add(linkroot);
                 } catch (Exception e) {
-                    LOGGER.error("Order failed for linkroot: " + linkroot + " Error: " + e.getMessage());
+                    LOGGER.error("Order failed for linkroot: " + linkroot + " Error: " + e);
                     rollbackOrders(isLocal, successfulOrders, brokerHeader, orderRequestMap);
                     throw new RuntimeException("Order process failed, rolled back successful orders.");                    
                 }
@@ -163,7 +163,7 @@ public class FinaApiCall {
         orderRequestMap.put("generalstore", generalstoreOrderRequest);
 
         // Invoke the sendOrdersWithRollback method
-        boolean acidOrders = sendOrdersWithRollback(true, orderRequestMap, brokerHeader);
+        boolean acidOrders = sendOrdersWithRollback(false, orderRequestMap, brokerHeader);
         System.out.println(acidOrders);
     }
 
