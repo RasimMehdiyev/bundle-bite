@@ -6,18 +6,17 @@ import OrderModalComponent from "../components/OrderModalComponent.jsx";
 import { useState } from "react";
 import {getCurrentUser, submitCart, getCart} from "../auth.js"
 import { doc,db,getDoc, query,where,collection,getDocs } from "../firebase-config.js";
-
-
-// import { addOrder } from "../auth.js";
-
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 const OrdersPage = () => {
     const [showModal, setShowModal] = useState("none");
-    
+    const navigate = useNavigate('');
 
     // Define state for cards array
     const [cards, setCards] = useState([]);
 
-    const submitCartLocal = () => {
+    const submitCartLocal = async () => {
+        const user = getCurrentUser();
         console.log("Cart submitted");
         let items = [];
         // Convert each item to a Firestore DocumentReference
@@ -29,7 +28,7 @@ const OrdersPage = () => {
         
         let orderDate = new Date();
         let uid = "O" + Math.random().toString(36).substr(2, 9).toUpperCase();
-        let order = {
+        let order_local = {
             items: items, // These are now Firestore DocumentReferences
             orderDate: orderDate,
             status: "pending",
@@ -37,10 +36,57 @@ const OrdersPage = () => {
             uid: uid,
             user: doc(db, "users", getCurrentUser().uid) // Convert user reference as well
         }
+        console.log(order_local);
+
+        let itemsToSubmit = [];
+        order_local.items.forEach(async item => {
+            // use cards array since it has quantity
+            let itemSnap = await getDoc(item);
+            let itemData = itemSnap.data();
+            itemsToSubmit.push({
+                "id": item.id,
+                "name": itemData.name,
+                "price": itemData.price,
+                "quantity": cards.find(card => card.ref === item.id).quantity
+            });
+        });
+
+        let order = {
+            "orderDate": order_local.orderDate,
+            "status": order_local.status,
+            "totalPrice": order_local.totalPrice,
+            "uid": order_local.uid,
+            "user": "/" + order_local.user.path,
+            "items": itemsToSubmit
+        }
         console.log(order);
-        submitCart(order);
+        let token = await user.getIdToken()
+        try {
+            axios.post('/users/order/checkout', order,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token,
+                    }
+                }
+
+            )
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error("There was an error submitting the order!", error);
+                });
+        }
+        catch (error) {
+            console.error("There was an error submitting the order!", error);
+        }
+
+
+        submitCart(order_local);
+        setCards([]);
     }
-        useEffect(() => {
+    useEffect(() => {
             const fetchCartItems = async () => {
                 const user = getCurrentUser();
                 if (user) {
@@ -87,7 +133,7 @@ const OrdersPage = () => {
             };
         }
             fetchCartItems();
-        }, []);
+    }, []);
 
     const openModal = () => {
         setShowModal("block"); // Show the modal
@@ -120,26 +166,55 @@ const OrdersPage = () => {
                     return card;
                 })
             );
+
         };
+
+        const navigateHome = () => {
+            navigate("/");
+        }
     
+    const removeItemByRefLocal = (ref) => {
+        // remove all items with the given ref
+        for (let i = 0; i < cards.length; i++) {
+            if (cards[i].ref === ref) {
+                cards.splice(i, 1);
+                i--;
+            }
+        }
+        // setCards(cards.filter(card => card.ref !== ref));
+        console.log("New cards: ", cards)
+    }
 
     return(
         <div>
             <div className="page" id="content-div">
             <SidebarComponent username="John Doe"/>
                 <div className="orders">
-                    <p className="cart-title">YOUR CART</p>
-                {cards.map(card => (
-                    <OrderCardComponent key={card.ref} card={card} updateQuantity={updateQuantity}/>           
-                ))}                
-                </div>
-                <div className="checkout">
-                    <div className="total-price">
-                        <p>TOTAL</p>
-                        <p style={{fontSize:'54px'}}>€{cards.reduce((acc, card) => acc + card.price * card.quantity, 0)}</p>
+                <p className="cart-title">YOUR CART</p>
+                {cards.length === 0 && 
+                    <div className="empty-cart">
+                        <p >Your cart is empty :(</p>
+                        <button class="empty-cart-shop-button" onClick={navigateHome}>SHOP</button>
                     </div>
+                }
+                {
+                    cards.length > 0 && cards.map(card => (
+                        <OrderCardComponent key={card.ref} card={card} updateQuantity={updateQuantity} remove={removeItemByRefLocal}/>    
+                    ))       
+                }
+
+                </div>
+                {
+                cards.length > 0 ?
+                <div className="checkout">
+                        <div className="total-price">
+                                <p>TOTAL</p>
+                                <p style={{fontSize:'54px'}}>€{cards.reduce((acc, card) => acc + card.price * card.quantity, 0)}</p>
+                            </div>
                     <button onClick={openModal} className="checkout-button">CHECKOUT</button>
                 </div>
+                : null
+                }
                 <OrderModalComponent enabled={showModal} onCancel={handleCancel} onConfirm={handleConfirm}/>
             </div>             
         </div>

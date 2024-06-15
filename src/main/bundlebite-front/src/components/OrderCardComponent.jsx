@@ -2,7 +2,7 @@ import React from "react";
 import OrderModalComponent from "./OrderModalComponent";
 
 
-const OrderCardComponent = ({card, updateQuantity}) => {
+const OrderCardComponent = ({card, updateQuantity, remove}) => {
     const handleIncrease = () => {
         console.log(card.quantity+1);
         var newQuantity = card.quantity + 1;
@@ -21,6 +21,10 @@ const OrderCardComponent = ({card, updateQuantity}) => {
             updateQuantity(card.id, 0);
         }
     }
+    const handleRemove = () => {
+        console.log("removing card with id: " + card.ref);
+        remove(card.ref);
+    }
 
     
 
@@ -28,7 +32,7 @@ const OrderCardComponent = ({card, updateQuantity}) => {
     <div className="order-card">
         <div className="order-card-left">
         <div onClick={handleCancel} style={{ cursor: 'pointer' }}>
-            <img className="trash-svg" src={process.env.PUBLIC_URL + "/images/trash-2.svg"} alt="Trash Icon" />
+            <img onClick={handleRemove} className="trash-svg" src={process.env.PUBLIC_URL + "/images/trash-2.svg"} alt="Trash Icon" />
         </div>
             <img src={process.env.PUBLIC_URL + "/images/design/" + card.img} alt="" />
             <span className="order-details">

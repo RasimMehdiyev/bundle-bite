@@ -3,11 +3,15 @@ package org.bundlebite.bundlebite2;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.cloud.firestore.annotation.PropertyName;
+
 public class Ingredient {
     private String name;
     private String idLink;
     private double price;
     private int quantity;
+    private int id;
+    private String ref;
 
 
     public Ingredient()
@@ -20,10 +24,28 @@ public class Ingredient {
         this.quantity = quantity;
     }
 
+    public int getId(){
+        return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public String getRef(){
+        return ref;
+    }
+
+    public void setRef(String ref){
+        this.ref = ref;
+    }
+
+    @PropertyName("link")
     public String getIdLink() {
         return idLink;
     }
 
+    @PropertyName("link")
     public void setIdLink(String idLink) {
         this.idLink = idLink;
     }

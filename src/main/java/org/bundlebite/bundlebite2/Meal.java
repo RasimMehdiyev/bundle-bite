@@ -11,6 +11,8 @@ public class Meal{
     private List<Ingredient> ingredients;
     private boolean availability;
     private String imagePath;
+    private String ref;
+
 
     public Meal() {
     }

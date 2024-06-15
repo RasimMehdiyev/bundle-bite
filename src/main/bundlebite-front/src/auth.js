@@ -115,6 +115,22 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+export const getCartLength = async(user) => {
+
+    if (user) {
+        const cartsRef = collection(db, "carts");
+        const q = query(cartsRef, where("user", "==", doc(db, "users", user.uid))); // Assuming there's a user field that stores references
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            const cartDoc = querySnapshot.docs[0];
+            const currentItems = cartDoc.data().items || [];
+            console.log("Current items: ", currentItems);
+            return currentItems.length;
+        }
+    }
+    return 0;
+}
+
 
 export const submitCart = (order) => {
     const user = getCurrentUser();
@@ -124,6 +140,25 @@ export const submitCart = (order) => {
         clearCart();
     }
 
+}
+
+export const removeItemFromCart = (itemRef) => {
+    const user = getCurrentUser();
+    if (user) {
+        const cartsRef = collection(db, "carts");
+        const q = query(cartsRef, where("user", "==", doc(db, "users", user.uid)));
+        getDocs(q).then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+                const cartDoc = querySnapshot.docs[0];
+                const currentItems = cartDoc.data().items || [];
+                const updatedItems = currentItems.filter((item) => item.id !== itemRef);
+                setDoc(cartDoc.ref, {
+                    items: updatedItems,
+                    lastUpdated: new Date()
+                });
+            }
+        });
+    }
 }
 
 export const clearCart = async() => {

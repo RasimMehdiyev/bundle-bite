@@ -1,9 +1,21 @@
 import React from "react";
-import { useAuth } from "../auth";
-
+import { useAuth, getCartLength, getCurrentUser } from "../auth";
+import { useEffect } from "react";
 const HeaderComponent = () => {
 
     const { user, role ,loading, name} = useAuth();
+    const [cartLength, setCartLength] = React.useState(0);
+
+    useEffect(() => {
+        const fetchCartLength = async () => {
+            const length = await getCartLength(user);
+            setCartLength(length);
+            console.log("Cart length: ", length);
+        };
+    
+        fetchCartLength();
+    }, [user]);
+   
 
 
     return (
@@ -16,7 +28,10 @@ const HeaderComponent = () => {
                 {
                     role !== 'manager'?
                     (<a href="/orders">
-                    <img className="cart" src={process.env.PUBLIC_URL + "/images/shopping-cart.svg"} alt="" />
+                        {
+                            cartLength > 0 ? <img className="cart" src={process.env.PUBLIC_URL + "/images/shopping-cart.svg"} alt="" /> : 
+                            <img className="cart" src={process.env.PUBLIC_URL + "/images/shopping_cart.svg"} alt="" /> 
+                        }
                     </a>):
                     (
                         <a></a>
