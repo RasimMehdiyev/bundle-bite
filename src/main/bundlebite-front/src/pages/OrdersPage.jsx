@@ -5,7 +5,7 @@ import OrderCardComponent from "../components/OrderCardComponent.jsx";
 import OrderModalComponent from "../components/OrderModalComponent.jsx";
 import { useState } from "react";
 import {getCurrentUser, submitCart, getCart} from "../auth.js"
-import { doc,db,getDoc, query,where,collection,getDocs } from "../firebase-config.js";
+import { doc,db,getDoc, query,where,collection,getDocs, updateDoc } from "../firebase-config.js";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 const OrdersPage = () => {
@@ -195,15 +195,41 @@ const OrdersPage = () => {
             navigate("/");
         }
     
-        const removeItemByRefLocal = (ref) => {
-            let testCart;
+        const removeItemByRefLocal = async (ref) => {
+            const user = getCurrentUser();
+            if (!user) {
+                console.log("User not found");
+                return;
+            }
         
-            testCart = cards.filter(card => card.ref !== ref)
-            setCards(testCart);
-
-            console.log("Removed item with ref: " + ref);
-            console.log(testCart);
+            // Fetch the cart from Firestore
+            const cartsRef = collection(db, "carts");
+            const q = query(cartsRef, where("user", "==", doc(db, "users", user.uid)));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+                // Assume there is only one cart per user
+                const cartDoc = querySnapshot.docs[0];
+                const cartData = cartDoc.data();
+                let updatedItems = [];
+                for (let card of cards) {
+                    if (card.ref !== ref) {
+                        updatedItems.push(doc(db, "BundleBite", card.ref));
+                    }
+                }
+                console.log(updatedItems)
+                // Update Firestore
+                await updateDoc(cartDoc.ref, {
+                    items: updatedItems
+                });
+        
+                // Update local state
+                setCards(cards.filter(card => card.ref !== ref));
+                console.log("Removed item with ref: " + ref);
+            } else {
+                console.log("No cart found for the user");
+            }
         }
+        
         
         
 
