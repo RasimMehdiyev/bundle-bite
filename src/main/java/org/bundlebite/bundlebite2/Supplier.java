@@ -38,7 +38,20 @@ public class Supplier {
         this.ingredients = ingredients;
     }
 
-    public void addIngredient(Ingredient ingredient) {
-        this.ingredients.add(ingredient);
+    public void addIngredient(Ingredient newIngredient) {
+        // Check if the ingredient already exists in the list
+        boolean found = false;
+        for (Ingredient ingredient : ingredients) {
+            if (ingredient.getIdLink().equals(newIngredient.getIdLink())) {
+                // If found, add the quantity of the new ingredient to the existing one
+                ingredient.setQuantity(ingredient.getQuantity() + newIngredient.getQuantity());
+                found = true;
+                break;
+            }
+        }
+        // If not found, add the new ingredient to the list
+        if (!found) {
+            this.ingredients.add(newIngredient);
+        }
     }
 }

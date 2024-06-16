@@ -56,6 +56,8 @@ public class FirebaseInit {
 
                 Map<String, Object> claims = new HashMap<>();
                 claims.put("role", "manager");
+                claims.put("displayName", "Rasim Manager");
+                claims.put("name", "Rasim Manager");
                 auth.setCustomUserClaims(user.getUid(), claims);
                 logger.info(successMessage, user.getEmail());
                 

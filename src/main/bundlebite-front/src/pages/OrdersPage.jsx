@@ -60,7 +60,6 @@ const OrdersPage = () => {
         for (const item of itemsToSubmit) {
             if (itemsMap.has(item.id)) {
                 const existingItem = itemsMap.get(item.id);
-                existingItem.quantity += item.quantity;
             } else {
                 itemsMap.set(item.id, { ...item });
             }
