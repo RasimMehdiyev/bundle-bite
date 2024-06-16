@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.bundlebite.bundlebite2.utils.*;
 import org.bundlebite.bundlebite2.utils.ApiCall;
 import org.bundlebite.bundlebite2.Supplier;
+import org.bundlebite.bundlebite2.utils.ordersToSuppliers.SupplierOrderItem;
 import org.bundlebite.bundlebite2.utils.ordersToSuppliers.SupplierOrderRequest;
 
 
@@ -301,10 +302,33 @@ public class OrdersController {
         finalApiCall.setApiKey("rasimrasim14");
         finalApiCall.setSuppliers(suppliers);
         Map<String, SupplierOrderRequest> supplierOrderRequests = new HashMap<>();
+        System.out.println("Order Request ID: " + finalApiCall.getOrderRequestId());
+            for (Supplier supplier : finalApiCall.getSuppliers()) {
+                System.out.println("Supplier ID: " + supplier.getId());
+                System.out.println("Linkroot: " + supplier.getLinkroot());
+                for (Ingredient ingredient : supplier.getIngredients()) {
+                    System.out.println("  Ingredient: " + ingredient.getName());
+                    System.out.println("  ID Link: " + ingredient.getIdLink());
+                    System.out.println("  Quantity: " + ingredient.getQuantity());
+                }
+            }
         boolean result = false;
         try{
            supplierOrderRequests = finalApiCall.convertToSupplierOrderRequests();
-           result = finalApiCall.sendOrdersWithRollback(true, supplierOrderRequests, "BundleBite");
+           for (Map.Entry<String, SupplierOrderRequest> entry : supplierOrderRequests.entrySet()) {
+                String linkroot = entry.getKey();
+                SupplierOrderRequest orderRequest = entry.getValue();
+                
+                System.out.println("Linkroot: " + linkroot);
+                System.out.println("OrderRequest ID: " + orderRequest.getOrderRequestId());
+                System.out.println("Orders:");
+                
+                for (SupplierOrderItem orderItem : orderRequest.getOrders()) {
+                    System.out.println("  OrderItem ID: " + orderItem.getId());
+                    System.out.println("  Quantity: " + orderItem.getQuantity());
+                }
+            }
+           result = FinaApiCall.sendOrdersWithRollback(false, supplierOrderRequests, "BundleBite");
         } catch (Exception e){
             logger.error("Error while converting FinaApiCall to SupplierOrderRequest: {}", e.getMessage());
         }

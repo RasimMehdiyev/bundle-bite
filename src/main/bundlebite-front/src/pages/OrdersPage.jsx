@@ -51,14 +51,26 @@ const OrdersPage = () => {
                 });
             }
         }
+        
+        const itemsMap = new Map();
+        for (const item of itemsToSubmit) {
+            if (itemsMap.has(item.id)) {
+                const existingItem = itemsMap.get(item.id);
+                existingItem.quantity += item.quantity;
+            } else {
+                itemsMap.set(item.id, { ...item });
+            }
+        }
 
+        // Convert the Map back to an array
+        const uniqueItems = Array.from(itemsMap.values());
         let order = {
             "orderDate": order_local.orderDate,
             "status": order_local.status,
             "totalPrice": order_local.totalPrice,
             "uid": order_local.uid,
             "user": "/" + order_local.user.path,
-            "items": itemsToSubmit
+            "items": uniqueItems
         }
         console.log(order);
         let token = await user.getIdToken();
@@ -76,6 +88,14 @@ const OrdersPage = () => {
                 .then(response => {
                     axios_response = response.data;
                     console.log(response.data);
+                    if (axios_response === true) {
+                        submitCart(order_local);
+                        setCards([]);
+                        console.log("Order submitted successfully!");
+                    }
+                    else {
+                        console.error("There was an error submitting the order!");
+                    }
                 })
                 .catch(error => {
                     console.error("There was an error submitting the order!", error);
@@ -85,14 +105,7 @@ const OrdersPage = () => {
             console.error("There was an error submitting the order!", error);
         }
 
-        if (axios_response === true) {
-            submitCart(order_local);
-            setCards([]);
-            console.log("Order submitted successfully!");
-        }
-        else {
-            console.error("There was an error submitting the order!");
-        }
+        
         
     }
     useEffect(() => {
