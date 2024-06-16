@@ -23,6 +23,7 @@
     flex-shrink: 0;
     cursor: pointer;
     border: none;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .button-text-disabled {
@@ -39,6 +40,27 @@
     cursor: not-allowed;
     border: none;
     opacity: 0.5;
+}
+
+.button-text.added-to-cart {
+    background-color: lightgreen;
+    /* Light green background */
+    color: white;
+    /* White text */
+    animation: pulse 1s;
+    /* Pulse animation */
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .button-text-inverse {

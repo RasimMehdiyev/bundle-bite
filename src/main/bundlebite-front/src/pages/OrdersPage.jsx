@@ -8,15 +8,19 @@ import {getCurrentUser, submitCart, getCart} from "../auth.js"
 import { doc,db,getDoc, query,where,collection,getDocs, updateDoc } from "../firebase-config.js";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+
+
 const OrdersPage = () => {
     const [showModal, setShowModal] = useState("none");
     const navigate = useNavigate('');
+    const [loading, setLoading] = useState(true);
 
     // Define state for cards array
     const [cards, setCards] = useState([]);
 
     const submitCartLocal = async () => {
         const user = getCurrentUser();
+        
         console.log("Cart submitted");
         let items = [];
         // Convert each item to a Firestore DocumentReference
@@ -111,6 +115,7 @@ const OrdersPage = () => {
     useEffect(() => {
             const fetchCartItems = async () => {
                 const user = getCurrentUser();
+                setLoading(true); // Start loading
                 if (user) {
                     const cartsRef = collection(db, "carts");
                     const q = query(cartsRef, where("user", "==", doc(db, "users", user.uid))); // Assuming there's a user field that stores references
@@ -151,6 +156,10 @@ const OrdersPage = () => {
                         console.log("Fetched cards:", fetchedCards);
                         setCards(fetchedCards);
                     }
+                    setLoading(false); // Stop loading
+                }
+                else{
+                    setLoading(false); // Stop loading
                 }
             };
         }
@@ -239,17 +248,28 @@ const OrdersPage = () => {
             <SidebarComponent username="John Doe"/>
                 <div className="orders">
                 <p className="cart-title">YOUR CART</p>
-                {cards.length === 0 && 
+                {loading ? (
+                    <div className="spinner"></div> // Loading indicator
+                ) : cards.length > 0 ? (
+                    cards.map(card => (
+                        <OrderCardComponent key={card.ref} card={card} updateQuantity={updateQuantity} remove={removeItemByRefLocal} />
+                    ))
+                ) : (
                     <div className="empty-cart">
                         <p >Your cart is empty :(</p>
                         <button class="empty-cart-shop-button" onClick={navigateHome}>SHOP</button>
                     </div>
+                )}
+
+
+                {/* {cards.length === 0 && 
+
                 }
                 {
                     cards.length > 0 && cards.map(card => (
                         <OrderCardComponent key={card.ref} card={card} updateQuantity={updateQuantity} remove={removeItemByRefLocal}/>    
                     ))       
-                }
+                } */}
 
                 </div>
                 {

@@ -7,6 +7,7 @@ import { getCurrentUser } from "../auth.js";
 const ProductCard = (props) => {
     const {user,loading,role} = useAuth();
     const navigate = useNavigate();
+    const [addedToCart, setAddedToCart] = React.useState(false);
 
     const addToCart = async () => {
         const user = getCurrentUser();
@@ -41,6 +42,13 @@ const ProductCard = (props) => {
                 lastUpdated: new Date() // Update the last updated time
             });
             console.log("Item added to existing cart.");
+            // Simulate adding item
+            setTimeout(() => {
+                setAddedToCart(true);
+                setTimeout(() => {
+                    setAddedToCart(false); // Reset the button after 2 seconds
+                }, 2000);
+            }, 500);
         } else {
             // No cart exists, create one
             let uid = "C" + Math.random().toString(36).substr(2, 9).toUpperCase();
@@ -53,6 +61,13 @@ const ProductCard = (props) => {
                 items: [newItem] // Create an array with the new item as the only element
             });
             console.log("New cart created and item added.");
+            // Simulate adding item
+            setTimeout(() => {
+                setAddedToCart(true);
+                setTimeout(() => {
+                    setAddedToCart(false); // Reset the button after 2 seconds
+                }, 2000);
+            }, 500);
         }
     };
 
@@ -77,7 +92,9 @@ const ProductCard = (props) => {
                     role !== 'manager' ? (
                         props.availability ? 
                     (
-                        <button className="button-text" onClick={addToCart}>ADD TO CART</button>
+                        <button className={`button-text ${addedToCart ? "added-to-cart" : ""}`} onClick={addToCart}>
+                            {addedToCart ? "ADDED" : "ADD TO CART"}
+                    </button>
                     ) :
                     <button className="button-text-disabled">ADD TO CART</button>
 
