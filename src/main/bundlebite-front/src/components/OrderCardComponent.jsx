@@ -46,7 +46,7 @@ const OrderCardComponent = ({card, updateQuantity, remove}) => {
         </div>
         <div className="order-card-right">
             <span className="order-price">
-                <span className="order-price-calc"> {card.price} x {card.quantity} = </span>
+                <span className="order-price-calc"> €{card.price} x {card.quantity} = </span>
                 €{card.price * card.quantity}
                 </span>
         </div>

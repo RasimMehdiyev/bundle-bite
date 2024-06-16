@@ -54,6 +54,7 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
+    justify-content: center;
 }
 
 .order-name {
@@ -62,6 +63,7 @@
     list-style: none;
     line-height: 0%;
     font-weight: 400;
+    text-align: center;
 }
 
 .order-price {
